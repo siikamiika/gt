@@ -28,7 +28,7 @@ def main():
 
     notify2.init('gt-notify')
     notification = notify2.Notification(summary=u'(Translating...)')
-    notification.set_timeout(args.timeout)
+    notification.set_timeout(args.timeout or notify2.EXPIRES_NEVER)
     notification.show()
 
     translation_done = False
@@ -39,7 +39,7 @@ def main():
         notification.update('An error occurred during translation',
                             'Please re-run gt-notify from terminal in '
                             'order to identify the problem')
-        notification.set_timeout(0)
+        notification.set_timeout(notify2.EXPIRES_NEVER)
         notification.set_urgency(notify2.URGENCY_CRITICAL)
         notification.show()
 
