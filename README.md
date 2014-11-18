@@ -4,6 +4,8 @@ This is a Python (python2) Google Translate client.
 
 Note that the `gt_console.py`/`gt_notify.py` clients are just an examples of `glue.py` usage and are full of tight-coupling antipattern.
 
+The `languages.sh` script can be used for fetching the abbreviation/language list.
+
 # Requirements
 
 gt\_notify:
