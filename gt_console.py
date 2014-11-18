@@ -19,7 +19,7 @@ following parts of the output, respectively:
     - Synonyms with -s/--synonyms
 
 Example:
-    gt-console.py --colors='33:32:4:0:1;37:0' ...''')
+    gt_console.py --colors='33:32:4:0:1;37:0' ...''')
 
     parser.add_argument('-c', '--enable-colors',
                         choices=['auto', 'yes', 'no'], default='auto',

@@ -26,7 +26,7 @@ def main():
     text = subprocess.check_output(['xsel', '--output', '--' + args.selection],
                                    universal_newlines=True)
 
-    notify2.init('gt-notify')
+    notify2.init('gt_notify')
     notification = notify2.Notification(summary=u'(Translating...)')
     notification.set_timeout(args.timeout or notify2.EXPIRES_NEVER)
     notification.show()
@@ -37,7 +37,7 @@ def main():
         if translation_done:
             return
         notification.update('An error occurred during translation',
-                            'Please re-run gt-notify from terminal in '
+                            'Please re-run gt_notify from terminal in '
                             'order to identify the problem')
         notification.set_timeout(notify2.EXPIRES_NEVER)
         notification.set_urgency(notify2.URGENCY_CRITICAL)
