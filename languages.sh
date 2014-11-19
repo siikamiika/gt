@@ -11,8 +11,11 @@ url=http://translate.google."${1:-com}"
 
 if hash wget 2>/dev/null; then
     wget -O- -U"$useragent" "$url"
-else
+elif hash curl 2>/dev/null; then
     curl -A"$useragent" "$url"
+else
+    echo >&2 "E: neither wget nor curl were found."
+    exit 1
 fi \
     | grep -o '<option value=[^ >]*>[^<]*</option>' \
     | sed -r 's;^<option value=([^ >]*)>([^<]*)</option>$;\1 \2;' \
