@@ -18,7 +18,7 @@ def main():
     args = parser.parse_args()
 
     unpretty_json = json_preproc.preprocess(
-        network.fetch(args.source_lang, args.target_lang, args.text))
+        network.fetch_response(args.source_lang, args.target_lang, args.text))
     pretty_json = json.dumps(
         json.loads(unpretty_json), sys.stdout, ensure_ascii=False, indent=2)
     print pretty_json.encode('utf-8')

@@ -8,4 +8,4 @@ def get_translation(source_lang, target_lang, text):
     return translation.from_json(
         json.loads(
             json_preproc.preprocess(
-                network.fetch(source_lang, target_lang, text))))
+                network.fetch_response(source_lang, target_lang, text))))
