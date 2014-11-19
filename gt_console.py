@@ -8,7 +8,7 @@ def main():
         description='CLI Google Translate client',
         formatter_class=argparse.RawTextHelpFormatter)
 
-    parser.add_argument('--colors', default='33:32:4:0:1;37:0', help='''\
+    parser.add_argument('--colors', default='33:32:4;1;37:0:1;37:0', help='''\
 colon-separated list of ANSI SGR attributes will be used to highlight the \
 following parts of the output, respectively:
     - Program messages/notes
@@ -19,7 +19,7 @@ following parts of the output, respectively:
     - Synonyms with -s/--synonyms
 
 Example:
-    gt_console.py --colors='33:32:4:0:1;37:0' ...''')
+    gt_console.py --colors='3:3:4;1;37:0:1;37:0' ...''')
 
     parser.add_argument('-c', '--enable-colors',
                         choices=['auto', 'yes', 'no'], default='auto',
