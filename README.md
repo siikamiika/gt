@@ -1,12 +1,12 @@
 # Description
 
-This is
+This is…
 
-* A library that parses Google Translate response (actually intended for evaluation as JavaScript);
+* A library that parses Google Translate response intended for evaluation as JavaScript;
 
 * A command-line interface (`gt_console.py`) with features including colors and pronouncing the translation;
 
-* A xsel+libnotify interface (`gt_notify.py`) that translates an X selection and and then shows a notification with html-formatted translation;
+* A xsel+libnotify interface (`gt_notify.py`) that translates a content of X selection and and then shows a notification with html-formatted translation;
 
 * A `say.py` tool to pronounce a text using Google Translate speech synthesizer;
 
@@ -22,7 +22,6 @@ The `languages.sh` script can be used for fetching the abbreviation/language lis
 ![Screenshot](https://cloud.githubusercontent.com/assets/5462697/5102877/ec07fb92-6fe1-11e4-9916-9784c97c7615.png)
 
 ![Screenshot](https://cloud.githubusercontent.com/assets/5462697/5102880/efb1483e-6fe1-11e4-9a33-cecbc33da590.png)
-
 
 ## xsel+libnotify interface
 ![Screenshot](https://cloud.githubusercontent.com/assets/5462697/5102702/8ae4583a-6fdf-11e4-91ed-259bf8f5a051.png)
@@ -55,8 +54,10 @@ Set up a keybind for `/path/to/gt_notify.py <soruce_lang> <target_lang>`. This u
 
 * You can specify `auto` as a source language code to enable auto-detection (this applies to `gt_console.py` as well);
 
-* Check out an [example of language guesser script](https://github.com/shdown/gt/wiki/Language-guesser-script) for two languages use different char sets.
+* Check out [an example of language guesser script](https://github.com/shdown/gt/wiki/Language-guesser-script) for two languages use different char sets.
 
 # TODO
 
 - Support for more Google Translate features such as definitions, examples, "see also"…
+
+- Add tests
