@@ -1,5 +1,4 @@
-"""Contains the `fetch_response' function for fetching Google Translate response
-"""
+"""Contains various network/URL construction functions"""
 from urllib2 import Request, urlopen
 from urllib import quote_plus
 
@@ -19,3 +18,8 @@ def fetch_response(source_lang, target_lang, text):
         return response.read()
     finally:
         response.close()
+
+def get_speech_url(lang, text):
+    return 'http://translate.google.com/translate_tts?ie=UTF-8&'\
+           'tl={lang}&q={text}'.format(
+               lang=quote_plus(lang), text=quote_plus(text))

@@ -24,7 +24,7 @@ Example:
     parser.add_argument('-c', '--enable-colors',
                         choices=['auto', 'yes', 'no'], default='auto',
                         help='''\
-controls if the program should use ANSI SGR escapes; \'auto\' (default) will \
+controls if the program should use ANSI SGR escapes; 'auto' (default) will \
 check if stdout is a tty''')
 
     parser.add_argument('-s', '--synonyms', action='store_true',
@@ -50,6 +50,11 @@ check if stdout is a tty''')
     parser.add_argument('-R', '--no-result-only', action='store_false',
                         dest='result_only',
                         help='include speech part-specific variants (default)')
+
+    parser.add_argument('-p', '--play', action='store_true', dest='play',
+                        help='''\
+pronounce the translation by importing say.py and calling say(...).
+'player' is not passed, see 'say.py --help' to find out how it is chosen''')
 
     parser.add_argument('source_lang',
                         help='source language code, or \'auto\' to auto-detect')
@@ -116,6 +121,11 @@ check if stdout is a tty''')
                 uprint(u'\n{}: {}'.format(
                     sgr_escape(speech_part_attr, plural_name),
                     ', '.join(variants)))
+
+    if args.play:
+        say = __import__('say')
+        say.say(lang=args.target_lang,
+                text=translation.translation.encode('utf-8'))
 
 if __name__ == '__main__':
     main()

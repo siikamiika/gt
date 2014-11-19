@@ -4,9 +4,11 @@ This is
 
 * A library that parses Google Translate response (actually intended for evaluation as JavaScript);
 
-* A command-line interface (`gt_console.py`) capable of colors, transcription and extended format switches;
+* A command-line interface (`gt_console.py`) with features including colors and pronouncing the translation;
 
 * A xsel+libnotify interface (`gt_notify.py`) that translates an X selection and and then shows a notification with html-formatted translation;
+
+* A `say.py` tool to pronounce a text using Google Translate speech synthesizer;
 
 * A simple debug tool (`dump_as_json.py`) that dumps Google Translate response as well-formatted JSON.
 
@@ -34,7 +36,7 @@ Set up an alias for `gt_console.py` (your shell .rc file, bash syntax used):
 alias gt='/path/to/gt_console.py'
 ```
 
-You can supply custom colors or a set of default options (can be overrided later by passing the opposite option):
+You can supply custom colors and a set of default options (can be overrided later by passing the opposite option):
 ```bash
 alias gt='/path/to/gt_console.py --colors="3:3:4;1;37:0:1;37:0" -s'
 ```
@@ -57,4 +59,4 @@ Set up a keybind for `/path/to/gt_notify.py <soruce_lang> <target_lang>`. This u
 
 # TODO
 
-- Support for more Google Translate features such as speech synthesizer, definitions, examples, "see also"…
+- Support for more Google Translate features such as definitions, examples, "see also"…
