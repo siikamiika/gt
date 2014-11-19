@@ -54,7 +54,10 @@ def main():
         summary += u'(Language detected: {})'.format(
             html_escape(translation.source_lang))
 
-    message = html_escape(translation.translation)
+    if translation.speech_parts:
+        message = u'<b>{}</b>'.format(translation.translation)
+    else:
+        message = html_escape(translation.translation)
 
     for speech_part in translation.speech_parts:
         variants = [v.variant for v in speech_part.variants]
