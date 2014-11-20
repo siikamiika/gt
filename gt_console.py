@@ -53,8 +53,10 @@ check if stdout is a tty''')
 
     parser.add_argument('-p', '--play', action='store_true', dest='play',
                         help='''\
-pronounce the translation by importing say.py and calling say(...).
-'player' is not passed, see 'say.py --help' to find out how it is chosen''')
+pronounce the translation by importing 'say.py' and calling say(...).''')
+
+    parser.add_argument('--player', default=None, help='''\
+choose a player to pass to say(...). See 'say.py --help' for details.''')
 
     parser.add_argument('source_lang',
                         help='source language code, or \'auto\' to auto-detect')
@@ -125,7 +127,8 @@ pronounce the translation by importing say.py and calling say(...).
     if args.play:
         say = __import__('say')
         say.say(lang=args.target_lang,
-                text=translation.translation.encode('utf-8'))
+                text=translation.translation.encode('utf-8'),
+                player=args.player)
 
 if __name__ == '__main__':
     main()

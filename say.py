@@ -18,9 +18,9 @@ def main():
         formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('-p', '--player', dest='player', default=None, help='''\
 choose a player.
-If not specified, GT_PLAYER environment variable is used;
-if empty, PLAYER environment variable is used;
-If empty, 'mplayer' is used.''')
+If not specified or empty, GT_PLAYER environment variable is used;
+if unset or empty, PLAYER environment variable is used;
+if unset or empty too, 'mplayer' is used.''')
 
     parser.add_argument('lang',
                         help='language code')
