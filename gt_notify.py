@@ -2,7 +2,6 @@
 import notify2
 import subprocess
 import argparse
-import atexit
 from cgi import escape as html_escape
 from gt import glue
 
@@ -16,6 +15,7 @@ def main():
     parser.add_argument('-t', '--timeout', type=float, default=0,
                         help='notification timeout or 0 (default) to show '
                              'forever')
+
     parser.add_argument('source_lang',
                         help='source language code, or \'auto\' to auto-detect')
     parser.add_argument('target_lang',
@@ -25,25 +25,6 @@ def main():
 
     text = subprocess.check_output(['xsel', '--output', '--' + args.selection],
                                    universal_newlines=True)
-
-    notify2.init('gt_notify')
-    notification = notify2.Notification(summary=u'(Translating...)')
-    notification.set_timeout(args.timeout or notify2.EXPIRES_NEVER)
-    notification.show()
-
-    translation_done = False
-
-    def exit_hook():
-        if translation_done:
-            return
-        notification.update('An error occurred during translation',
-                            'Please re-run gt_notify from terminal in '
-                            'order to identify the problem')
-        notification.set_timeout(notify2.EXPIRES_NEVER)
-        notification.set_urgency(notify2.URGENCY_CRITICAL)
-        notification.show()
-
-    atexit.register(exit_hook)
 
     translation = glue.get_translation(source_lang=args.source_lang,
                                        target_lang=args.target_lang,
@@ -65,8 +46,11 @@ def main():
             html_escape(speech_part.name),
             html_escape(', '.join(variants)))
 
-    translation_done = True
-    notification.update(summary, message)
+    notify2.init('gt_notify')
+
+    notification = notify2.Notification(summary=summary, message=message)
+    notification.timeout = args.timeout or notify2.EXPIRES_NEVER
+
     notification.show()
 
 if __name__ == '__main__':
