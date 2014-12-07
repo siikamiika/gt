@@ -42,8 +42,9 @@ def from_json(json):
         return SpeechPart(name=speech_part_json[0],
                           variants=map(variant_from_json, speech_part_json[2]))
 
-    return Translation(translation=' '.join(map(lambda x: x[0].strip(),
-                                                json[0])),
+    return Translation(translation=' '.join(filter(bool,
+                                                   map(lambda x: x[0].strip(),
+                                                       json[4]))),
                        source=json[0][0][1],
                        transcription=json[0][0][2],
                        source_lang=json[2],
