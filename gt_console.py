@@ -51,13 +51,6 @@ check if stdout is a tty''')
                         dest='result_only',
                         help='include speech part-specific variants (default)')
 
-    parser.add_argument('-p', '--play', action='store_true', dest='play',
-                        help='''\
-pronounce the translation by importing 'say.py' and calling say(...).''')
-
-    parser.add_argument('--player', default=None, help='''\
-choose a player to pass to say(...). See 'say.py --help' for details.''')
-
     parser.add_argument('source_lang',
                         help='source language code, or \'auto\' to auto-detect')
     parser.add_argument('target_lang',
@@ -123,12 +116,6 @@ choose a player to pass to say(...). See 'say.py --help' for details.''')
                 uprint(u'\n{}: {}'.format(
                     sgr_escape(speech_part_attr, plural_name),
                     ', '.join(variants)))
-
-    if args.play:
-        say = __import__('say')
-        say.say(lang=args.target_lang,
-                text=translation.translation.encode('utf-8'),
-                player=args.player)
 
 if __name__ == '__main__':
     main()

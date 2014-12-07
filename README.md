@@ -4,11 +4,9 @@ This is…
 
 * A library that parses Google Translate response intended for evaluation as JavaScript;
 
-* A command-line interface (`gt_console.py`) with features including colors and pronouncing the translation;
+* A command-line interface (`gt_console.py`);
 
 * A xsel+libnotify interface (`gt_notify.py`) that translates a content of X selection and and then shows a notification with html-formatted translation;
-
-* A `say.py` tool to pronounce a text using Google Translate speech synthesizer;
 
 * A simple debug tool (`dump_as_json.py`) that dumps Google Translate response as well-formatted JSON.
 
