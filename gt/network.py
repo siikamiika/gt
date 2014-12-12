@@ -2,16 +2,64 @@
 from urllib2 import Request, urlopen
 from urllib import quote_plus
 
-def fetch_response(source_lang, target_lang, text):
-    url = 'http://translate.google.com/translate_a/t?client=t&'\
-          'text={text}&sl={sl}&tl={tl}'.format(
-              text=quote_plus(text),
-              sl=quote_plus(source_lang),
-              tl=quote_plus(target_lang))
+USER_AGENT = 'Mozilla/5.0'
+
+def fetch_response(source_lang, target_lang, text,
+                   include_translation=True, include_translit=True,
+                   include_variants=False, include_segments=False,
+                   include_examples=False, include_definitions=False,
+                   include_see_also=False, include_synonyms=False,
+                   suggest_language=True, correct_typos=False,
+                   interface_lang=None):
+    """Fetches Google Translate's response string.
+
+    Args:
+        source_lang: source language code
+        target_lang: target language code
+        text: text to translate
+        include_translit: include a transcription (IPA) of the original and
+            a transliteration (latin symbols) of the translated text.
+        include_variants: include speech-part specific translations for a word
+        include_segments: include translation of segments (words) for a text
+        include_examples: include usage examples for a word
+        include_definitions: include definition for a word
+        include_see_also: include the "see also" list for a word
+        include_synonyms: include the synonyms list for a word
+        suggest_language: suggest another source language(s)
+        correct_typos: suggest typo fixes
+        interface_lang: code of a language will be used to name speech parts
+            (default: English)
+    """
+    url = 'http://translate.google.com/translate_a/single?client=t'
+    url += '&sl=' + quote_plus(source_lang) + \
+           '&tl=' + quote_plus(target_lang) + \
+           '&q=' + quote_plus(text)
+
+    if include_translation:
+        url += '&dt=t'
+    if include_translit:
+        url += '&dt=rm'
+    if include_variants:
+        url += '&dt=bd'
+    if include_segments:
+        url += '&dt=at'
+    if include_examples:
+        url += '&dt=ex'
+    if include_definitions:
+        url += '&dt=md'
+    if include_see_also:
+        url += '&dt=rw'
+    if include_synonyms:
+        url += '&dt=ss'
+    if suggest_language:
+        url += '&dt=ld'
+    if correct_typos:
+        url += '&dt=qc'
+    if interface_lang is not None:
+        url += '&hl=' + quote_plus(interface_lang)
 
     request = Request(url)
-
-    request.add_header('User-Agent', 'Mozilla/5.0')
+    request.add_header('User-Agent', USER_AGENT)
 
     response = urlopen(request)
     try:

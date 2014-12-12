@@ -16,8 +16,12 @@ def main():
 
     args = parser.parse_args()
 
-    unpretty_json = json_preproc.preprocess(
-        network.fetch_response(args.source_lang, args.target_lang, args.text))
+    semijson = network.fetch_response(
+        args.source_lang, args.target_lang, args.text,
+        include_translit=True, include_variants=True, include_segments=True,
+        include_examples=True, include_definitions=True, include_see_also=True,
+        include_synonyms=True, suggest_language=True, correct_typos=True)
+    unpretty_json = json_preproc.preprocess(semijson)
     pretty_json = json.dumps(
         json.loads(unpretty_json), ensure_ascii=False, indent=2)
     print pretty_json.encode('utf-8')
