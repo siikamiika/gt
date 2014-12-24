@@ -8,29 +8,47 @@ def uprint(value, end='\n'):
     sys.stdout.write((value + end).encode('utf-8'))
 
 def parse_colors(colors):
-    # no[te] tr[anslit] s[peech]p[art] o[riginal]s[ynonym] he[ader] ex[ample]
-    # bo[ld]
     return dict(map(lambda kv: kv.split('=', 1), colors.split(':')))
 
-DEFAULT_COLORS = 'no=01;31:tr=32:sp=01;34:os=01;31:he=01;32:ex=33:bo=01;04'
+DEFAULT_COLORS = 'no=1;31:tr=32:sp=1;34:tv=1;31:os=:he=1;32:ex=33:bo=1;4'
 
 def main():
     parser = argparse.ArgumentParser(
-        description='CLI Google Translate client',
+        description='''CLI Google Translate client
+
+environment variables:
+
+    GT_COLORS
+        overrides the default colors and other attributes used to highlight
+        various parts of the output. Its value is a colon-separated list of
+        part=attributes pairs that defaults to
+            ''' + DEFAULT_COLORS + '''
+
+        The following parts of output are supported:
+            no  notice
+            tr  translit
+            sp  speech part name
+            tv  speech part-specific translation variant
+            os  synonym in original language
+            he  header
+            ex  usage example in the context of the definition
+            bo  "bold" text used to highlight the word in the example
+''',
         formatter_class=argparse.RawTextHelpFormatter)
 
     parser.add_argument('-t', '--translit',
                         action='store_true',
                         help='show translation transliteration')
 
-    parser.add_argument('-r', '--result-only',
-                        action='store_true',
-                        help='do not show translation variants of a given word')
+    verbosity = parser.add_mutually_exclusive_group()
+    verbosity.add_argument('-r', '--result-only',
+                           action='store_true',
+                           help='do not show translation variants of a given word')
 
-    parser.add_argument('-x', '--extended',
-                        action='store_true',
-                        help='show synonyms in source language for each '
-                             'translation variant (incompatible with -r)')
+    verbosity.add_argument('-x', '--extended',
+                           action='store_true',
+                           help='show synonyms in source language for each '
+                                'translation variant')
 
     parser.add_argument('-e', '--examples',
                         action='store_true',
@@ -119,14 +137,14 @@ def main():
 
                 for varaint in speech_part_variants.variants:
                     uprint(u'  {}: {}'.format(
-                        varaint.translation,
+                        colorize('tv', varaint.translation),
                         colorize('os', ', '.join(varaint.synonyms))))
             else:
                 variants = map(lambda v: v.translation,
                                speech_part_variants.variants)
                 uprint(u' {}: {}'.format(
                     colorize('sp', speech_part_variants.speech_part),
-                    colorize('os', ', '.join(variants))))
+                    colorize('tv', ', '.join(variants))))
 
     if translation.examples:
         uprint(u'\n{}:'.format(colorize('he', 'Examples')))
