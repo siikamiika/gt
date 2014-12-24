@@ -43,7 +43,8 @@ environment variables:
     verbosity = parser.add_mutually_exclusive_group()
     verbosity.add_argument('-r', '--result-only',
                            action='store_true',
-                           help='do not show translation variants of a given word')
+                           help='do not show translation variants of a given '
+                                'word')
 
     verbosity.add_argument('-x', '--extended',
                            action='store_true',
