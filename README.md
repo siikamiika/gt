@@ -1,12 +1,18 @@
-# Description
+# What´s that?
 
-This is…
+* A library that parses Google Translate response intended for evaluation as JavaScript. Its features include:
 
-* A library that parses Google Translate response intended for evaluation as JavaScript;
+    * Transliteration of original (IPA) and translated (latin symbols) texts
 
-* A command-line interface (`gt_console.py`);
+    * Word translation variants by part of speech, translation variants of text segments
 
-* A xsel+libnotify interface (`gt_notify.py`) that translates a content of X selection and and then shows a notification with html-formatted translation;
+    * Examples, definitions, synonyms, “see also” list
+
+    * Original language and typo correction
+
+* A nice command-line interface (`gt_console.py`) makes use of all library features;
+
+* A xsel+libnotify interface (`gt_notify.py`) that translates the content of X selection and shows a notification with html-formatted translation;
 
 * A simple debug tool (`dump_as_json.py`) that dumps Google Translate response as well-formatted JSON.
 
@@ -15,14 +21,10 @@ The `languages.sh` script can be used for fetching the abbreviation/language lis
 # Screenshots
 
 ## Command-line interface
-![Screenshot](https://cloud.githubusercontent.com/assets/5462697/5102897/4d3d8a12-6fe2-11e4-9380-2cc81d795188.png)
-
-![Screenshot](https://cloud.githubusercontent.com/assets/5462697/5102877/ec07fb92-6fe1-11e4-9916-9784c97c7615.png)
-
-![Screenshot](https://cloud.githubusercontent.com/assets/5462697/5102880/efb1483e-6fe1-11e4-9a33-cecbc33da590.png)
+TODO
 
 ## xsel+libnotify interface
-![Screenshot](https://cloud.githubusercontent.com/assets/5462697/5102702/8ae4583a-6fdf-11e4-91ed-259bf8f5a051.png)
+TODO
 
 # Usage tips
 
@@ -56,6 +58,6 @@ Set up a keybind for `/path/to/gt_notify.py <soruce_lang> <target_lang>`. This u
 
 # TODO
 
-- Support for more Google Translate features such as definitions, examples, "see also"…
+- Document everything
 
 - Add tests
