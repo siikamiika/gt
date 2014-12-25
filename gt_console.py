@@ -71,6 +71,10 @@ environment variables:
                         action='store_true',
                         help='auto-correct the original text')
 
+    parser.add_argument('-l', '--suggest-lang',
+                        action='store_true',
+                        help='suggect the original language(s)')
+
     parser.add_argument('source_lang')
     parser.add_argument('target_lang')
     parser.add_argument('text')
@@ -100,7 +104,7 @@ environment variables:
             include_definitions=args.definitions,
             include_see_also=args.see_also,
             include_synonyms=args.synonyms,
-            suggest_language=True,
+            suggest_language=args.suggest_lang,
             correct_typos=args.correct,
             interface_lang=None)
 
