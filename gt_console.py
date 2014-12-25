@@ -10,7 +10,7 @@ def uprint(value, end='\n'):
 def parse_colors(colors):
     return dict(map(lambda kv: kv.split('=', 1), colors.split(':')))
 
-DEFAULT_COLORS = 'no=1;31:tr=32:sp=1;34:tv=1;31:os=:he=1;32:ex=33:bo=1;4'
+DEFAULT_COLORS = 'no=1;33:tr=32:sp=1;34:tv=1;31:os=:he=1;32:ex=33:bo=1;4'
 
 def main():
     parser = argparse.ArgumentParser(
