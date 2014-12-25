@@ -158,7 +158,7 @@ environment variables:
             example = ex.example_html \
                     .replace('<b>', bold_start) \
                     .replace('</b>', bold_end)
-            uprint(u'  {}'.format(example))
+            uprint(u' {}'.format(example))
 
     if translation.speech_part_definitions:
         uprint(u'\n{}:'.format(colorize('he', 'Definitions')))
