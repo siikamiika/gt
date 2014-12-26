@@ -36,7 +36,7 @@ The `languages.sh` script can be used for fetching the abbreviation/language lis
 
 ![1](https://cloud.githubusercontent.com/assets/5462697/5102702/8ae4583a-6fdf-11e4-91ed-259bf8f5a051.png)
 
-# TODO
+# To-do
 
 - Document everything
 
