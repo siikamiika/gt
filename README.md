@@ -20,11 +20,16 @@ The `languages.sh` script can be used for fetching the abbreviation/language lis
 
 # Screenshots
 
-## Command-line interface
-TODO
+### Command-line interface
 
-## xsel+libnotify interface
-TODO
+![1](https://cloud.githubusercontent.com/assets/5462697/5557491/3427f084-8d11-11e4-8dc1-03401ad9fd89.png)
+
+![2](https://cloud.githubusercontent.com/assets/5462697/5557493/44c76942-8d11-11e4-8bca-fbd550c1a2f4.png)
+
+![3](https://cloud.githubusercontent.com/assets/5462697/5557495/63c2587a-8d11-11e4-88fe-76b21c3f3a10.png)
+
+### xsel+libnotify interface
+![1](https://cloud.githubusercontent.com/assets/5462697/5102702/8ae4583a-6fdf-11e4-91ed-259bf8f5a051.png)
 
 # Usage tips
 
