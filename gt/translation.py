@@ -7,6 +7,12 @@ def _list_get(obj, *indices):
         obj = obj[index]
     return obj
 
+def _list(obj):
+    return obj if type(obj) is list else []
+
+def _unicode(obj):
+    return obj if type(obj) is unicode else u''
+
 class SpeechPartSpecificVariants:
 
     class SpeechPartSpecificVariant:
@@ -25,7 +31,7 @@ class SpeechPartSpecificVariants:
     def __init__(self, json_obj):
         self.speech_part = _list_get(json_obj, 0)
         self.variants = map(self.SpeechPartSpecificVariant,
-                            _list_get(json_obj, 2) or [])
+                            _list(_list_get(json_obj, 2)))
 
 class SegmentTranslation:
     original_segment = None
@@ -34,7 +40,7 @@ class SegmentTranslation:
     def __init__(self, json_obj):
         self.original_segment = _list_get(json_obj, 0)
         self.translations = map(lambda obj: _list_get(obj, 0),
-                                _list_get(json_obj, 2) or [])
+                                _list(_list_get(json_obj, 2)))
 
 class LanguageSuggestion:
     language = None
@@ -72,7 +78,7 @@ class SpeechPartSpecificDefinitions:
     def __init__(self, json_obj):
         self.speech_part = _list_get(json_obj, 0)
         self.definitions = map(self.SpeechPartSpecificDefinition,
-                               _list_get(json_obj, 1) or [])
+                               _list(_list_get(json_obj, 1)))
 
 class UsageExample:
     example_html = None
@@ -111,33 +117,29 @@ class Translation:
         self.translation_translit = ''
         self.original_ipa = ''
 
-        for sentence in _list_get(json_obj, 0) or []:
+        for sentence in _list(_list_get(json_obj, 0)):
             if type(sentence) is not list:
                 continue
-
-            if len(sentence) == 2 and type(sentence[0]) is unicode and \
-               type(sentence[1]) is unicode:
-                self.translation += sentence[0]
-                self.original += sentence[1]
-
-            elif len(sentence) == 4 and type(sentence[0]) is unicode and \
-                 type(sentence[2]) is unicode:
-                self.original_ipa += sentence[0]
-                self.translation_translit += sentence[2]
+            if len(sentence) == 2:
+                self.translation += _unicode(sentence[0])
+                self.original += _unicode(sentence[1])
+            elif len(sentence) == 4:
+                self.original_ipa += _unicode(sentence[0])
+                self.translation_translit += _unicode(sentence[2])
 
         self.speech_part_variants = map(SpeechPartSpecificVariants,
-                                        _list_get(json_obj, 1) or [])
+                                        _list(_list_get(json_obj, 1)))
         self.source_lang = _list_get(json_obj, 2)
-        self.segments = map(SegmentTranslation, _list_get(json_obj, 5) or [])
+        self.segments = map(SegmentTranslation, _list(_list_get(json_obj, 5)))
         self.correction = Correction(_list_get(json_obj, 7))
 
         self.lang_suggests = [LanguageSuggestion(lang, weight) for lang, weight
-                              in zip(_list_get(json_obj, 8, 0) or [],
-                                     _list_get(json_obj, 8, 2) or [])]
+                              in zip(_list(_list_get(json_obj, 8, 0)),
+                                     _list(_list_get(json_obj, 8, 2)))]
 
         self.speech_part_synonyms = map(SpeechPartSpecificSynonyms,
-                                        _list_get(json_obj, 11) or [])
+                                        _list(_list_get(json_obj, 11)))
         self.speech_part_definitions = map(SpeechPartSpecificDefinitions,
-                                           _list_get(json_obj, 12) or [])
-        self.examples = map(UsageExample, _list_get(json_obj, 13, 0) or [])
-        self.see_also = _list_get(json_obj, 14, 0) or []
+                                           _list(_list_get(json_obj, 12)))
+        self.examples = map(UsageExample, _list(_list_get(json_obj, 13, 0)))
+        self.see_also = _list(_list_get(json_obj, 14, 0))
