@@ -95,9 +95,7 @@ class Translation:
     original = None
     translation_translit = None
     original_ipa = None
-
     source_lang = None
-
     speech_part_variants = None
     segments = None
     correction = None
@@ -112,17 +110,18 @@ class Translation:
         self.original = ''
         self.translation_translit = ''
         self.original_ipa = ''
+
         for sentence in _list_get(json_obj, 0) or []:
             if type(sentence) is not list:
                 continue
+
             if len(sentence) == 2 and type(sentence[0]) is unicode and \
                type(sentence[1]) is unicode:
-
                 self.translation += sentence[0]
                 self.original += sentence[1]
+
             elif len(sentence) == 4 and type(sentence[0]) is unicode and \
                  type(sentence[2]) is unicode:
-
                 self.original_ipa += sentence[0]
                 self.translation_translit += sentence[2]
 
