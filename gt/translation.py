@@ -109,7 +109,7 @@ class Translation:
     translation = None
     original = None
     translation_translit = None
-    original_ipa = None
+    original_translit = None
     source_lang = None
     speech_part_variants = None
     segments = None
@@ -124,7 +124,7 @@ class Translation:
         self.translation = ''
         self.original = ''
         self.translation_translit = ''
-        self.original_ipa = ''
+        self.original_translit = ''
 
         for sentence in _list(_list_get(json_obj, 0)):
             if type(sentence) is not list:
@@ -133,8 +133,8 @@ class Translation:
                 self.translation += _unicode(sentence[0])
                 self.original += _unicode(sentence[1])
             elif len(sentence) == 4:
-                self.original_ipa += _unicode(sentence[0])
                 self.translation_translit += _unicode(sentence[2])
+                self.original_translit += _unicode(sentence[3])
 
         self.speech_part_variants = map(SpeechPartSpecificVariants,
                                         _list(_list_get(json_obj, 1)))
