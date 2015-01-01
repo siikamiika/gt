@@ -2,8 +2,8 @@
 objects into JSON ones."""
 
 def preprocess(source):
-    """Converts JavaScript-compatible data structures sent by google to a valid
-    JSON.
+    """Converts JavaScript-compatible data structures sent by Google Translate
+    to a valid JSON.
 
     The only known differences are:
         * omitting of 'null' inside arrays;
