@@ -3,8 +3,16 @@ response."""
 
 def _list_get(obj, *indices):
     """Safely obtains an object from nested lists. Returns None in case of
-    an error -- that is, when if, on some step, an object fetched is not a list
-    or the next index is invalid."""
+    an error -- that is, if on some step an object fetched is not a list or
+    the next index is invalid.
+
+    >>> _list_get([1, 2, 3], 2)
+    3
+    >>> _list_get([1, 2, 3], 3) # invalid index, returns None
+    >>> _list_get([[1, 2, 3], [4, [5, 6]], 7], 1, 1, 0)
+    5
+    >>> _list_get([[1, 2], 3], 1, 0) # not a list, returns None
+    """
     for index in indices:
         if type(obj) is not list:
             return None
@@ -152,3 +160,7 @@ class Translation:
                                            _list(_list_get(json_obj, 12)))
         self.examples = map(UsageExample, _list(_list_get(json_obj, 13, 0)))
         self.see_also = _list(_list_get(json_obj, 14, 0))
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
