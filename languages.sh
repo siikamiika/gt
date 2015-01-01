@@ -10,9 +10,9 @@ useragent='Mozilla/5.0'
 url=http://translate.google."${1:-com}"
 
 if hash wget 2>/dev/null; then
-    wget -O- -U"$useragent" "$url"
+    wget -nv -O- -U"$useragent" "$url"
 elif hash curl 2>/dev/null; then
-    curl -L -A"$useragent" "$url"
+    curl -# -L -A"$useragent" "$url"
 else
     echo >&2 "E: neither wget nor curl were found."
     exit 1
