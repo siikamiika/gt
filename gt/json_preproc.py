@@ -68,3 +68,7 @@ def preprocess(source):
         result += symbol
 
     return result
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
