@@ -111,11 +111,11 @@ environment variables:
     translation = get_translation(args.source_lang, args.target_lang, args.text)
 
     if translation.correction.corrected_text:
-        typos = translation.correction.corrected_html.count('<b><i>')
-        new_text = translation.correction.corrected_text.encode('utf-8')
+        typos_n = translation.correction.corrected_html.count('<b><i>')
+        uprint(colorize('no', u'Typos corrected: {}'.format(typos_n)))
+        corrected_text = translation.correction.corrected_text
         translation = get_translation(args.source_lang, args.target_lang,
-                                      new_text)
-        uprint(colorize('no', u'Typos corrected: {}'.format(typos)))
+                                      corrected_text.encode('utf-8'))
 
     if args.source_lang == 'auto':
         uprint(colorize('no', u'Language detected: {}'.format(
@@ -125,9 +125,9 @@ environment variables:
                          map(lambda sug: sug.language,
                              translation.lang_suggests))
     if suggestions:
-        uprint(colorize('no', u'Language{} suggested: {}'.format(
-            's' if len(suggestions) > 1 else '',
-            ', '.join(suggestions))))
+        message = u'Languages suggested: {}' if len(suggestions) > 1 else \
+                  u'Language suggested: {}'
+        uprint(colorize('no', message.format(', '.join(suggestions))))
 
     uprint(translation.translation)
 
