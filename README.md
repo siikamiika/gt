@@ -16,7 +16,7 @@
 
 * A simple debug tool (`dump_as_json.py`) that dumps Google Translate response as well-formatted JSON.
 
-The `languages.sh` script can be used for fetching the abbreviation/language list.
+The `languages.sh` script can be used for fetching the abbreviation/language list (or just see the table [here](https://github.com/shdown/gt/wiki/Abbreviation%E2%86%92language-correspondence-table)).
 
 # Screenshots
 
