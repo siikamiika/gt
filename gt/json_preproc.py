@@ -6,8 +6,8 @@ def preprocess(source):
     JSON.
 
     The only known differences are:
-        1) 'null' omitting inside arrays;
-        2) optional meaningless comma before ']'.
+        * omitting of 'null' inside arrays;
+        * an optional meaningless comma before ']'.
 
     >>> preprocess('[1,,2]')
     '[1,null,2]'
@@ -26,13 +26,13 @@ def preprocess(source):
     """
 
     class ParserState:
-        """ Insert next symbol to the result as-is """
+        """Insert next symbol to the result as-is"""
         NORMAL = 1
-        """ Insert 'null' to the result if next symbol is comma """
+        """Insert 'null' to the result if next symbol is comma"""
         COMMA = 2
-        """ Inside a string """
+        """Inside a string"""
         STRING = 3
-        """ Inside a string, previos character is a backslash """
+        """Inside a string, previos character is a backslash"""
         STRING_ESCAPE = 4
 
     state = ParserState.NORMAL

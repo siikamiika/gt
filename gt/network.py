@@ -1,4 +1,4 @@
-"""Contains various network/URL construction functions"""
+"""This module contains the URL construction and fetching function."""
 from urllib2 import Request, urlopen
 from urllib import quote_plus
 

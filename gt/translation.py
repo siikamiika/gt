@@ -1,4 +1,10 @@
+"""This module contains data structures that reflect Google Translate
+response."""
+
 def _list_get(obj, *indices):
+    """Safely obtains an object from nested lists. Returns None in case of
+    an error -- that is, when if, on some step, an object fetched is not a list
+    or the next index is invalid."""
     for index in indices:
         if type(obj) is not list:
             return None
@@ -8,9 +14,12 @@ def _list_get(obj, *indices):
     return obj
 
 def _list(obj):
+    """Returns the original object if it is a list, or an empty list."""
     return obj if type(obj) is list else []
 
 def _unicode(obj):
+    """Returns the original object if it is an unicode object, or an empty
+    unicode string."""
     return obj if type(obj) is unicode else u''
 
 class SpeechPartSpecificVariants:
