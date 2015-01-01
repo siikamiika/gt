@@ -2,7 +2,7 @@
 
 * A library that parses Google Translate response intended for evaluation as JavaScript. Its features include:
 
-    * Transliteration of original (IPA) and translated (latin symbols) texts
+    * Transliteration of original and translated texts
 
     * Word translation variants by part of speech, translation variants of text segments
 
@@ -10,7 +10,7 @@
 
     * Original language and typo correction
 
-* A nice command-line interface (`gt_console.py`) makes use of all library features;
+* A nice command-line interface (`gt_console.py`);
 
 * A xsel+libnotify interface (`gt_notify.py`) that translates the content of X selection and shows a notification with html-formatted translation;
 
