@@ -2,13 +2,15 @@
 
 * A library that parses Google Translate response intended for evaluation as JavaScript. Its features include:
 
-    * Transliteration of original and translated texts
+    * Transliteration of the original text/translation result
 
     * Word translation variants by part of speech, translation variants of text segments
 
-    * Examples, definitions, synonyms, “see also” list
+    * Usage examples, definitions, synonyms, “see also” list
 
-    * Original language and typo correction
+    * Language detection and original language suggestion
+
+    * Typo correction
 
 * A nice command-line interface (`gt_console.py`);
 
