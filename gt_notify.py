@@ -86,9 +86,6 @@ include "see also" list as notification actions.
             else:
                 words = translation.see_also[:int(args.see_also)]
 
-            if words:
-                message += u'\n\n<u>See also</u>:'
-
             def callback(_notification, action):
                 notification.close()
 
