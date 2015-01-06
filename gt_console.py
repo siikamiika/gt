@@ -114,8 +114,12 @@ environment variables:
     translation = get_translation(args.source_lang, args.target_lang, args.text)
 
     if translation.correction.corrected_text:
-        typos_n = translation.correction.corrected_html.count('<b><i>')
-        uprint(colorize('no', u'Typos corrected: {}'.format(typos_n)))
+        if translation.correction.corrected_html:
+            typos_n = translation.correction.corrected_html.count('<b><i>')
+            uprint(colorize('no', u'Typos corrected: {}'.format(typos_n)))
+        else:
+            uprint(colorize('no', u'Text was corrected'))
+
         corrected_text = translation.correction.corrected_text
         translation = get_translation(args.source_lang, args.target_lang,
                                       corrected_text.encode('utf-8'))
