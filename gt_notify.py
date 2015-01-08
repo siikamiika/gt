@@ -23,10 +23,10 @@ def main():
                         help='include translation transliteration')
     parser.add_argument('-a', '--see-also', metavar='{no,yes,<number>}',
                         default='no', help='''\
-include "see also" list as notification actions.
-    "no": do not include;
-    "yes": include all;
-    <number>: include first N words only.''')
+map the "see also" list to notification actions.
+    "no": do not map;
+    "yes": map all;
+    <number>: map first <number> entries only.''')
 
     parser.add_argument('source_lang',
                         help='source language code, or \'auto\' to auto-detect')
