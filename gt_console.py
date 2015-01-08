@@ -132,7 +132,8 @@ environment variables:
                          map(lambda sug: sug.language,
                              translation.lang_suggests))
     if suggestions:
-        uprint(colorize('no', 'Language(s) suggested: {}'.format(suggestions)))
+        uprint(colorize('no', 'Language(s) suggested: {}'.format(
+            ', '.join(suggestions))))
 
     uprint(translation.translation)
 
