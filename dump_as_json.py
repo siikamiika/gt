@@ -12,7 +12,8 @@ def main():
                         help='source language code, or \'auto\' to auto-detect')
     parser.add_argument('target_lang',
                         help='target language code')
-    parser.add_argument('text')
+    parser.add_argument('text',
+                        help='text to translate')
 
     args = parser.parse_args()
 
