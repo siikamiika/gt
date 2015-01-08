@@ -116,7 +116,7 @@ environment variables:
     if translation.correction.corrected_text:
         if translation.correction.corrected_html:
             typos_n = translation.correction.corrected_html.count('<b><i>')
-            uprint(colorize('no', u'Typos corrected: {}'.format(typos_n)))
+            uprint(colorize('no', u'Typo(s) corrected: {}'.format(typos_n)))
         else:
             uprint(colorize('no', u'Text was corrected'))
 
@@ -132,9 +132,7 @@ environment variables:
                          map(lambda sug: sug.language,
                              translation.lang_suggests))
     if suggestions:
-        message = u'Languages suggested: {}' if len(suggestions) > 1 else \
-                  u'Language suggested: {}'
-        uprint(colorize('no', message.format(', '.join(suggestions))))
+        uprint(colorize('no', 'Language(s) suggested: {}'.format(suggestions)))
 
     uprint(translation.translation)
 
