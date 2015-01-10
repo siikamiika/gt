@@ -17,6 +17,7 @@ def fetch_response(source_lang, target_lang, text,
         source_lang: source language code
         target_lang: target language code
         text: text to translate
+        include_translation: include the translation itself
         include_translit: include transcriptions/transliterations of original
             and translated texts.
         include_variants: include speech-part specific translations for a word
