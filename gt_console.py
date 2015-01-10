@@ -118,7 +118,7 @@ environment variables:
             typos_n = translation.correction.corrected_html.count('<b><i>')
             uprint(colorize('no', u'Typo(s) corrected: {}'.format(typos_n)))
         else:
-            uprint(colorize('no', u'Text was corrected'))
+            uprint(colorize('no', 'Text was corrected'))
 
         corrected_text = translation.correction.corrected_text
         translation = get_translation(args.source_lang, args.target_lang,
@@ -133,7 +133,7 @@ environment variables:
         if not lang_suggests:
             uprint(colorize('no', 'No languages were suggested'))
         elif lang_suggests != [translation.source_lang]:
-            uprint(colorize('no', 'Language(s) suggested: {}'.format(
+            uprint(colorize('no', u'Language(s) suggested: {}'.format(
                 ', '.join(lang_suggests))))
 
     uprint(translation.translation)
