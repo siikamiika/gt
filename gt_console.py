@@ -128,12 +128,13 @@ environment variables:
         uprint(colorize('no', u'Language detected: {}'.format(
             translation.source_lang)))
 
-    suggestions = filter(lambda lang: lang != translation.source_lang,
-                         map(lambda sug: sug.language,
-                             translation.lang_suggests))
-    if suggestions:
-        uprint(colorize('no', 'Language(s) suggested: {}'.format(
-            ', '.join(suggestions))))
+    if args.suggest_lang:
+        lang_suggests = map(lambda s: s.language, translation.lang_suggests)
+        if not lang_suggests:
+            uprint(colorize('no', 'No languages were suggested'))
+        elif lang_suggests != [translation.source_lang]:
+            uprint(colorize('no', 'Language(s) suggested: {}'.format(
+                ', '.join(lang_suggests))))
 
     uprint(translation.translation)
 
