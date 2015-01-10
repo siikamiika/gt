@@ -162,8 +162,8 @@ environment variables:
         uprint(u'\n{}:'.format(colorize('he', 'Examples')))
         for ex in translation.examples:
             if 'bo' in colors:
-                bold_start, bold_end = ('\033[{}m'.format(colors['bo']),
-                                        '\033[0m')
+                bold_start, bold_end = '\033[{}m'.format(colors['bo']), \
+                                       '\033[0m'
             else:
                 bold_start, bold_end = '', ''
             example = ex.example_html \
