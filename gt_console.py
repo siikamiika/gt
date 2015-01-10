@@ -84,7 +84,7 @@ environment variables:
 
     args = parser.parse_args()
 
-    if sys.stdout.isatty() and os.getenv('TERM') != 'dumb':
+    if sys.stdout.isatty() and os.getenv('TERM') not in [None, 'dumb']:
         colors = parse_colors(DEFAULT_COLORS)
         gt_colors = os.getenv('GT_COLORS')
         if gt_colors:
