@@ -8,7 +8,7 @@ def uprint(value, end='\n'):
     sys.stdout.write((value + end).encode('utf-8'))
 
 def parse_colors(colors):
-    return dict(map(lambda kv: kv.split('=', 1), colors.split(':')))
+    return dict(kv.split('=', 1) for kv in colors.split(':'))
 
 DEFAULT_COLORS = 'no=1;33:tr=32:sp=1;34:tv=1;31:os=:he=1;32:ex=33:bo=1;4'
 
@@ -152,8 +152,8 @@ environment variables:
                         colorize('tv', varaint.translation),
                         colorize('os', ', '.join(varaint.synonyms))))
             else:
-                variants = map(lambda v: v.translation,
-                               speech_part_variants.variants)
+                variants = (v.translation for v
+                            in speech_part_variants.variants)
                 uprint(u' {}: {}'.format(
                     colorize('sp', speech_part_variants.speech_part),
                     colorize('tv', ', '.join(variants))))
