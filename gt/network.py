@@ -5,11 +5,11 @@ from urllib import quote_plus
 USER_AGENT = 'Mozilla/5.0'
 
 def fetch_response(source_lang, target_lang, text,
-                   include_translation=True, include_translit=True,
+                   include_translation=True, include_translit=False,
                    include_variants=False, include_segments=False,
                    include_examples=False, include_definitions=False,
                    include_see_also=False, include_synonyms=False,
-                   suggest_language=True, correct_typos=False,
+                   suggest_language=False, correct_typos=False,
                    interface_lang=None):
     """Fetches Google Translate's response string.
 
