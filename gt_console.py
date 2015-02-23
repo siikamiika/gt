@@ -84,18 +84,16 @@ environment variables:
 
     args = parser.parse_args()
 
-    if sys.stdout.isatty() and os.getenv('TERM') not in [None, 'dumb']:
-        colors = parse_colors(DEFAULT_COLORS)
-        gt_colors = os.getenv('GT_COLORS')
-        if gt_colors:
-            colors.update(parse_colors(gt_colors))
-    else:
-        colors = {}
+    ansi_capable = sys.stdout.isatty() and \
+                   os.getenv('TERM') not in [None, 'dumb']
+
+    colors = parse_colors(DEFAULT_COLORS)
+    colors.update(os.getenv('GT_COLORS', ''))
 
     def colorize(color, text):
-        if color not in colors:
-            return text
-        return u'\033[{}m{}\033[0m'.format(colors[color], text)
+        if ansi_capable and color in colors:
+            return u'\033[{}m{}\033[0m'.format(colors[color], text)
+        return text
 
     def get_translation(source_lang, target_lang, text):
         return glue.get_translation(
@@ -161,7 +159,7 @@ environment variables:
     if translation.examples:
         uprint(u'\n{}:'.format(colorize('he', 'Examples')))
         for ex in translation.examples:
-            if 'bo' in colors:
+            if ansi_capable and 'bo' in colors:
                 bold_start, bold_end = '\033[{}m'.format(colors['bo']), \
                                        '\033[0m'
             else:
