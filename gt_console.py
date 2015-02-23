@@ -8,8 +8,6 @@ def uprint(value, end='\n'):
     sys.stdout.write((value + end).encode('utf-8'))
 
 def parse_colors(colors):
-    if not colors:
-        return {}
     return dict(kv.split('=', 1) for kv in colors.split(':') if '=' in kv)
 
 DEFAULT_COLORS = 'no=1;33:tr=32:sp=1;34:tv=1;31:os=:he=1;32:ex=33:bo=1;4'
@@ -90,7 +88,7 @@ environment variables:
                    os.getenv('TERM') not in [None, 'dumb']
 
     colors = parse_colors(DEFAULT_COLORS)
-    colors.update(os.getenv('GT_COLORS', ''))
+    colors.update(parse_colors(os.getenv('GT_COLORS', '')))
 
     def colorize(color, text):
         if ansi_capable and color in colors:
