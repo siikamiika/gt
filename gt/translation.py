@@ -25,10 +25,10 @@ def _list(obj):
     """Returns the original object if it is a list, or an empty list."""
     return obj if type(obj) is list else []
 
-def _unicode(obj):
-    """Returns the original object if it is an unicode object, or an empty
-    unicode string."""
-    return obj if type(obj) is unicode else u''
+def _str(obj):
+    """Returns the original object if it is an string object, or an empty
+    string."""
+    return obj if type(obj) is str else ''
 
 class SpeechPartSpecificVariants:
 
@@ -47,8 +47,8 @@ class SpeechPartSpecificVariants:
 
     def __init__(self, json_obj):
         self.speech_part = _list_get(json_obj, 0)
-        self.variants = map(self.SpeechPartSpecificVariant,
-                            _list(_list_get(json_obj, 2)))
+        self.variants = list(map(self.SpeechPartSpecificVariant,
+                                 _list(_list_get(json_obj, 2))))
 
 class SegmentTranslation:
     original_segment = None
@@ -56,8 +56,8 @@ class SegmentTranslation:
 
     def __init__(self, json_obj):
         self.original_segment = _list_get(json_obj, 0)
-        self.translations = map(lambda obj: _list_get(obj, 0),
-                                _list(_list_get(json_obj, 2)))
+        self.translations = list(map(lambda obj: _list_get(obj, 0),
+                                     _list(_list_get(json_obj, 2))))
 
 class LanguageSuggestion:
     language = None
@@ -94,8 +94,8 @@ class SpeechPartSpecificDefinitions:
 
     def __init__(self, json_obj):
         self.speech_part = _list_get(json_obj, 0)
-        self.definitions = map(self.SpeechPartSpecificDefinition,
-                               _list(_list_get(json_obj, 1)))
+        self.definitions = list(map(self.SpeechPartSpecificDefinition,
+                                    _list(_list_get(json_obj, 1))))
 
 class UsageExample:
     example_html = None
@@ -138,27 +138,29 @@ class Translation:
             if type(sentence) is not list:
                 continue
             if len(sentence) == 2:
-                self.translation += _unicode(sentence[0])
-                self.original += _unicode(sentence[1])
+                self.translation += _str(sentence[0])
+                self.original += _str(sentence[1])
             elif len(sentence) == 4:
-                self.translation_translit += _unicode(sentence[2])
-                self.original_translit += _unicode(sentence[3])
+                self.translation_translit += _str(sentence[2])
+                self.original_translit += _str(sentence[3])
 
-        self.speech_part_variants = map(SpeechPartSpecificVariants,
-                                        _list(_list_get(json_obj, 1)))
+        self.speech_part_variants = list(map(SpeechPartSpecificVariants,
+                                             _list(_list_get(json_obj, 1))))
         self.source_lang = _list_get(json_obj, 2)
-        self.segments = map(SegmentTranslation, _list(_list_get(json_obj, 5)))
+        self.segments = list(map(SegmentTranslation,
+                                 _list(_list_get(json_obj, 5))))
         self.correction = Correction(_list_get(json_obj, 7))
 
         self.lang_suggests = [LanguageSuggestion(lang, weight) for lang, weight
                               in zip(_list(_list_get(json_obj, 8, 0)),
                                      _list(_list_get(json_obj, 8, 2)))]
 
-        self.speech_part_synonyms = map(SpeechPartSpecificSynonyms,
-                                        _list(_list_get(json_obj, 11)))
-        self.speech_part_definitions = map(SpeechPartSpecificDefinitions,
-                                           _list(_list_get(json_obj, 12)))
-        self.examples = map(UsageExample, _list(_list_get(json_obj, 13, 0)))
+        self.speech_part_synonyms = list(map(SpeechPartSpecificSynonyms,
+                                             _list(_list_get(json_obj, 11))))
+        self.speech_part_definitions = list(map(SpeechPartSpecificDefinitions,
+                                                _list(_list_get(json_obj, 12))))
+        self.examples = list(map(UsageExample,
+                                 _list(_list_get(json_obj, 13, 0))))
         self.see_also = _list(_list_get(json_obj, 14, 0))
 
 if __name__ == '__main__':

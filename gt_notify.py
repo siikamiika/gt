@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 import notify2
 import subprocess
 import argparse
@@ -62,21 +62,21 @@ map the "see also" list to notification actions.
 
         summary = ''
         if args.source_lang == 'auto':
-            summary += u'(Language detected: {})'.format(
+            summary += '(Language detected: {})'.format(
                 html_escape(translation.source_lang))
 
         if translation.speech_part_variants:
-            message = u'<b>{}</b>'.format(html_escape(translation.translation))
+            message = '<b>{}</b>'.format(html_escape(translation.translation))
         else:
             message = html_escape(translation.translation)
 
         if translation.translation_translit:
-            message += u'\n<i>{}</i>'.format(html_escape(
+            message += '\n<i>{}</i>'.format(html_escape(
                 translation.translation_translit))
 
         for speech_part_variant in translation.speech_part_variants:
             variants = [v.translation for v in speech_part_variant.variants]
-            message += u'\n\n<u>{}s</u>: {}'.format(
+            message += '\n\n<u>{}s</u>: {}'.format(
                 html_escape(speech_part_variant.speech_part),
                 html_escape(', '.join(variants)))
 

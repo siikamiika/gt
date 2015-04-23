@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 import argparse
 import json
 from gt import network, json_preproc
@@ -25,7 +25,7 @@ def main():
     unpretty_json = json_preproc.preprocess(semijson)
     pretty_json = json.dumps(
         json.loads(unpretty_json), ensure_ascii=False, indent=2)
-    print pretty_json.encode('utf-8')
+    print(pretty_json)
 
 if __name__ == '__main__':
     main()

@@ -1,6 +1,6 @@
 """This module contains the URL construction and fetching function."""
-from urllib2 import Request, urlopen
-from urllib import quote_plus
+from urllib.parse import quote_plus
+from urllib.request import Request, urlopen
 
 USER_AGENT = 'Mozilla/5.0'
 
@@ -63,7 +63,4 @@ def fetch_response(source_lang, target_lang, text,
     request.add_header('User-Agent', USER_AGENT)
 
     response = urlopen(request)
-    try:
-        return response.read()
-    finally:
-        response.close()
+    return response.read().decode('utf-8')

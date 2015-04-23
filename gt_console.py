@@ -1,11 +1,8 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 import os
 import sys
 import argparse
 from gt import glue
-
-def uprint(value, end='\n'):
-    sys.stdout.write((value + end).encode('utf-8'))
 
 def parse_colors(colors):
     return dict(kv.split('=', 1) for kv in colors.split(':') if '=' in kv)
@@ -92,7 +89,7 @@ environment variables:
 
     def colorize(color, text):
         if ansi_capable and color in colors:
-            return u'\033[{}m{}\033[0m'.format(colors[color], text)
+            return '\033[{}m{}\033[0m'.format(colors[color], text)
         return text
 
     def get_translation(source_lang, target_lang, text):
@@ -114,50 +111,49 @@ environment variables:
     if translation.correction.corrected_text:
         if translation.correction.corrected_html:
             typos_n = translation.correction.corrected_html.count('<b><i>')
-            uprint(colorize('no', u'Typo(s) corrected: {}'.format(typos_n)))
+            print(colorize('no', 'Typo(s) corrected: {}'.format(typos_n)))
         else:
-            uprint(colorize('no', 'Text was corrected'))
+            print(colorize('no', 'Text was corrected'))
 
-        corrected_text = translation.correction.corrected_text
         translation = get_translation(args.source_lang, args.target_lang,
-                                      corrected_text.encode('utf-8'))
+                                      translation.correction.corrected_text)
 
     if args.source_lang == 'auto':
-        uprint(colorize('no', u'Language detected: {}'.format(
+        print(colorize('no', 'Language detected: {}'.format(
             translation.source_lang)))
 
     if args.suggest_lang:
         lang_suggests = map(lambda s: s.language, translation.lang_suggests)
         if not lang_suggests:
-            uprint(colorize('no', 'No languages were suggested'))
+            print(colorize('no', 'No languages were suggested'))
         elif lang_suggests != [translation.source_lang]:
-            uprint(colorize('no', u'Language(s) suggested: {}'.format(
+            print(colorize('no', 'Language(s) suggested: {}'.format(
                 ', '.join(lang_suggests))))
 
-    uprint(translation.translation)
+    print(translation.translation)
 
     if translation.translation_translit:
-        uprint(colorize('tr', format(translation.translation_translit)))
+        print(colorize('tr', format(translation.translation_translit)))
 
     if translation.speech_part_variants:
         for speech_part_variants in translation.speech_part_variants:
             if args.extended:
-                uprint(u' {}:'.format(colorize(
+                print(' {}:'.format(colorize(
                     'sp', speech_part_variants.speech_part)))
 
                 for varaint in speech_part_variants.variants:
-                    uprint(u'  {}: {}'.format(
+                    print('  {}: {}'.format(
                         colorize('tv', varaint.translation),
                         colorize('os', ', '.join(varaint.synonyms))))
             else:
                 variants = (v.translation for v
                             in speech_part_variants.variants)
-                uprint(u' {}: {}'.format(
+                print(' {}: {}'.format(
                     colorize('sp', speech_part_variants.speech_part),
                     colorize('tv', ', '.join(variants))))
 
     if translation.examples:
-        uprint(u'\n{}:'.format(colorize('he', 'Examples')))
+        print('\n{}:'.format(colorize('he', 'Examples')))
         for ex in translation.examples:
             if ansi_capable and 'bo' in colors:
                 bold_start, bold_end = '\033[{}m'.format(colors['bo']), \
@@ -165,31 +161,31 @@ environment variables:
             else:
                 bold_start, bold_end = '', ''
             example = ex.example_html \
-                    .replace('<b>', bold_start) \
-                    .replace('</b>', bold_end)
-            uprint(u' {}'.format(example))
+                .replace('<b>', bold_start) \
+                .replace('</b>', bold_end)
+            print(' {}'.format(example))
 
     if translation.speech_part_definitions:
-        uprint(u'\n{}:'.format(colorize('he', 'Definitions')))
+        print('\n{}:'.format(colorize('he', 'Definitions')))
         for speech_part_def in translation.speech_part_definitions:
-            uprint(u' {}:'.format(colorize('sp', speech_part_def.speech_part)))
+            print(' {}:'.format(colorize('sp', speech_part_def.speech_part)))
             for definition in speech_part_def.definitions:
                 if definition.example:
-                    uprint(u'  {} -- {}'.format(
+                    print('  {} -- {}'.format(
                         definition.definition,
                         colorize('ex', definition.example)))
                 else:
-                    uprint(u'  {}'.format(definition.definition))
+                    print('  {}'.format(definition.definition))
 
     if translation.speech_part_synonyms:
-        uprint(u'\n{}:'.format(colorize('he', 'Synonyms')))
+        print('\n{}:'.format(colorize('he', 'Synonyms')))
         for synonyms in translation.speech_part_synonyms:
-            uprint(u' {}: {}'.format(colorize('sp', synonyms.speech_part),
-                                     ', '.join(synonyms.synonyms)))
+            print(' {}: {}'.format(colorize('sp', synonyms.speech_part),
+                                   ', '.join(synonyms.synonyms)))
 
     if translation.see_also:
-        uprint(u'\n{}:'.format(colorize('he', 'See also')))
-        uprint(u' {}'.format(', '.join(translation.see_also)))
+        print('\n{}:'.format(colorize('he', 'See also')))
+        print(' {}'.format(', '.join(translation.see_also)))
 
 if __name__ == '__main__':
     main()
