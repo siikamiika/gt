@@ -3,7 +3,7 @@ response."""
 
 def _list_get(obj, *indices):
     """Safely obtains an object from nested lists. Returns None in case of
-    an error -- that is, if on some step an object fetched is not a list or
+    an error - that is, if on some step an object fetched is not a list or
     the next index is invalid.
 
     >>> _list_get([1, 2, 3], 2)

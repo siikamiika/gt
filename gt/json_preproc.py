@@ -26,13 +26,13 @@ def preprocess(source):
     """
 
     class ParserState:
-        """Insert next symbol to the result as-is"""
+        """Going to append next symbol as-is"""
         NORMAL = 1
-        """Insert 'null' to the result if next symbol is comma"""
+        """Going to append 'null' if the next symbol is comma"""
         COMMA = 2
-        """Inside a string"""
+        """We're inside a string; going to wait for an unescaped comma"""
         STRING = 3
-        """Inside a string, previos character is a backslash"""
+        """We're inside a string, previos character is a backslash"""
         STRING_ESCAPE = 4
 
     state = ParserState.NORMAL

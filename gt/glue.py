@@ -1,4 +1,4 @@
-"""This module contains the function that glues the `network', `json_preproc'
+"""This module contains a function that glues the `network', `json_preproc'
 and `translation' modules and the `json' module from the python standard
 library."""
 from gt import network, json_preproc, translation
