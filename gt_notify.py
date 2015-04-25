@@ -5,6 +5,31 @@ import argparse
 from cgi import escape as html_escape
 from gt import glue
 
+class SeeAlso:
+    NO = -1
+    YES = -2
+
+    def __init__(self, arg):
+        if arg == 'no':
+            self.value = SeeAlso.NO
+        elif arg == 'yes':
+            self.value = SeeAlso.YES
+        else:
+            self.value = int(arg)
+            if self.value < 0:
+                raise ValueError('--see-also argument is negative')
+
+    def __bool__(self):
+        return self.value != SeeAlso.NO
+
+    def slice_off(self, see_also):
+        if self.value == SeeAlso.NO:
+            return []
+        elif self.value == SeeAlso.YES:
+            return see_also
+        else:
+            return see_also[:self.value]
+
 def main():
     parser = argparse.ArgumentParser(
         description='xsel/libnotify Google Translate client',
@@ -22,7 +47,7 @@ def main():
     parser.add_argument('-t', '--translit', action='store_true',
                         help='include translation transliteration')
     parser.add_argument('-a', '--see-also', metavar='{no,yes,<number>}',
-                        default='no', help='''\
+                        type=SeeAlso, default='no', help='''\
 map the "see also" list to notification actions.
     "no": do not map;
     "yes": map all;
@@ -38,7 +63,7 @@ map the "see also" list to notification actions.
     selection = subprocess.check_output(['xsel', '-o', '--' + args.selection],
                                         universal_newlines=True)
 
-    messing_with_mainloop = args.see_also != 'no'
+    messing_with_mainloop = bool(args.see_also)
 
     params_stack = [(args.source_lang, args.target_lang, selection)]
 
@@ -50,7 +75,7 @@ map the "see also" list to notification actions.
             source_lang=source_lang, target_lang=target_lang, text=text,
             include_translit=args.translit, include_variants=True,
             include_segments=False, include_examples=False,
-            include_definitions=False, include_see_also=args.see_also != 'no',
+            include_definitions=False, include_see_also=bool(args.see_also),
             include_synonyms=False, suggest_language=True,
             correct_typos=False, interface_lang=None)
 
@@ -80,11 +105,8 @@ map the "see also" list to notification actions.
                 html_escape(speech_part_variant.speech_part),
                 html_escape(', '.join(variants)))
 
-        if args.see_also != 'no':
-            if args.see_also == 'yes':
-                words = translation.see_also
-            else:
-                words = translation.see_also[:int(args.see_also)]
+        if args.see_also:
+            see_also = args.see_also.slice_off(translation.see_also)
 
             def callback(_notification, action):
                 notification.close()
@@ -92,18 +114,18 @@ map the "see also" list to notification actions.
                 command, arg = action.split('_', 1)
                 if command == 'sa':
                     index = int(arg)
-                    new_params = (source_lang, target_lang, words[index])
+                    new_params = (source_lang, target_lang, see_also[index])
                     params_stack.append(new_params)
 
-            for index, word in enumerate(words):
+            for index, word in enumerate(see_also):
                 notification.add_action('sa_{}'.format(index), word, callback)
 
         notification.update(summary, message)
         notification.show()
 
         if messing_with_mainloop:
-            import glib
-            main_loop = glib.MainLoop()
+            from gi.repository import GLib
+            main_loop = GLib.MainLoop()
             notification.connect('closed', lambda reason: main_loop.quit())
             main_loop.run()
 
