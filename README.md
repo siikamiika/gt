@@ -2,7 +2,7 @@
 
 * A library that parses Google Translate response intended for evaluation as JavaScript. Its features include:
 
-    * Transliteration of the original text/translation result
+    * Transcription/transliteration
 
     * Word translation variants by part of speech, translation variants of text segments
 
@@ -14,11 +14,11 @@
 
 * A nice command-line interface (`gt_console.py`);
 
-* A xsel+libnotify interface (`gt_notify.py`) that translates the content of X selection and shows a notification with html-formatted translation;
+* A xsel+libnotify interface (`gt_notify.py`) that translates the content of X selection and then shows a notification with translation;
 
 * A simple debug tool (`dump_as_json.py`) that dumps Google Translate response as well-formatted JSON.
 
-The `languages` script can be used for fetching the abbreviation/language list (or just see the table [here](https://github.com/shdown/gt/wiki/Abbreviation%E2%86%92language-correspondence-table)).
+The `languages` script can be used for fetching the abbreviation/language list (or you can just see [the table](https://github.com/shdown/gt/wiki/Abbreviation%E2%86%92language-correspondence-table)).
 
 The `gt_play` script can be used for playing back/downloading voice using Google Translate voice synthesizer.
 
@@ -39,9 +39,3 @@ The `gt_play` script can be used for playing back/downloading voice using Google
 (with a keybind set up)
 
 ![1](https://cloud.githubusercontent.com/assets/5462697/5102702/8ae4583a-6fdf-11e4-91ed-259bf8f5a051.png)
-
-# To-do
-
-- Document everything
-
-- Add tests
