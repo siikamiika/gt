@@ -123,7 +123,7 @@ environment variables:
             translation.source_lang)))
 
     if args.suggest_lang:
-        lang_suggests = map(lambda s: s.language, translation.lang_suggests)
+        lang_suggests = list(map(lambda s: s.language, translation.lang_suggests))
         if not lang_suggests:
             print(colorize('no', 'No languages were suggested'))
         elif lang_suggests != [translation.source_lang]:
