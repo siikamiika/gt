@@ -33,7 +33,7 @@ get_voice_url() {
         text=${text:0:100}
     fi
     local text=$(urlencode "$text")
-    # Hopefully no need in URL-encoding these two…
+    # Hopefully no need in URL-encoding these two...
     local enc=$3
     local lang=$1
 
@@ -70,7 +70,7 @@ EXAMPLES:
     exit 2
 }
 
-# -> (similar to “get_voice_url”)
+# -> (similar to "get_voice_url")
 download() {
     local -a downloader
     # Replace all slashes with underscopes
@@ -89,7 +89,7 @@ download() {
     "${downloader[@]}" "$(get_voice_url "$@")"
 }
 
-# -> (similar to “get_voice_url”)
+# -> (similar to "get_voice_url")
 play() {
     # Try to grab $PLAYER environment variable
     [[ -z $player ]] && player=$PLAYER
