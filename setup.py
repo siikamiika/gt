@@ -14,9 +14,9 @@ setup(name='gt',
       },
       entry_points={
           'console_scripts': ['gt = gt_clients.gt_console:main',
-                              'gt_notify = gt_clients.gt_notify:main',
-                              'gt_dump_json = gt_clients.gt_dump_json:main',
+                              'gt-notify = gt_clients.gt_notify:main',
+                              'gt-dump-json = gt_clients.gt_dump_json:main',
                              ],
       },
-      scripts=['gt_play'],
+      scripts=['gt-play'],
      )
