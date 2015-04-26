@@ -1,4 +1,4 @@
-from setuptools import setup
+from distutils.core import setup
 
 setup(name='gt',
       version='0.0.1',
@@ -7,16 +7,6 @@ setup(name='gt',
       author_email='shdownnine@gmail.com',
       url='https://github.com/shdown/gt',
       license='LGPLv3',
-      packages=['gt', 'gt_clients'],
-      extras_require={
-          'gt_notify': ['notify2'],
-          'gt_notify_see_also': ['gi'],
-      },
-      entry_points={
-          'console_scripts': ['gt = gt_clients.gt_console:main',
-                              'gt-notify = gt_clients.gt_notify:main',
-                              'gt-dump-json = gt_clients.gt_dump_json:main',
-                             ],
-      },
-      scripts=['gt-play'],
+      packages=['gt'],
+      scripts=['gt_console', 'gt_notify', 'gt_dump_json', 'gt_play'],
      )
