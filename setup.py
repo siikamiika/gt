@@ -13,7 +13,7 @@ setup(name='gt',
           'gt_notify_see_also': ['gi'],
       },
       entry_points={
-          'console_scripts': ['gt_console = gt_clients.gt_console:main',
+          'console_scripts': ['gt = gt_clients.gt_console:main',
                               'gt_notify = gt_clients.gt_notify:main',
                              ],
       },
