@@ -12,21 +12,21 @@
 
     * Typo correction
 
-* A nice command-line interface (`gt_clients/gt_console.py`/`gt` after installing);
+* A nice command-line interface (`gt_console`);
 
-* A xsel+libnotify interface (`gt_clients/gt_notify.py`/`gt-notify` after installing) that translates the content of X selection and then shows a notification with translation;
+* An xsel+libnotify interface (`gt_notify`) that translates the content of X selection and then shows a notification with translation;
 
-* A simple debug tool (`gt_clients/gt_dump_json.py`/`gt-dump-json` after installing) that dumps Google Translate response as well-formatted JSON.
+* A simple debug tool (`gt_dump_json`) that dumps Google Translate response as well-formatted JSON.
 
 The `languages` script can be used for fetching the abbreviation/language list (or you can just see [the table](https://github.com/shdown/gt/wiki/Abbreviation%E2%86%92language-correspondence-table)).
 
-The `gt-play` script can be used for playing back/downloading voice using Google Translate voice synthesizer.
+The `gt_play` script can be used for playing back/downloading voice using Google Translate voice synthesizer.
 
 # Screenshots
 
 ### Command-line interface
 
-(with `alias gt=/path/to/gt_console.py`)
+(with `alias gt=gt_console`)
 
 ![1](https://cloud.githubusercontent.com/assets/5462697/5557491/3427f084-8d11-11e4-8dc1-03401ad9fd89.png)
 
