@@ -14,7 +14,7 @@ def _list_get(obj, *indices):
     >>> _list_get([[1, 2], 3], 1, 0) # not a list, returns None
     """
     for index in indices:
-        if type(obj) is not list:
+        if not isinstance(obj, list):
             return None
         if index >= len(obj):
             return None
@@ -23,12 +23,12 @@ def _list_get(obj, *indices):
 
 def _list(obj):
     """Returns the original object if it is a list, or an empty list."""
-    return obj if type(obj) is list else []
+    return obj if isinstance(obj, list) else []
 
 def _str(obj):
     """Returns the original object if it is an string object, or an empty
     string."""
-    return obj if type(obj) is str else ''
+    return obj if isinstance(obj, str) else ''
 
 class SpeechPartSpecificVariants:
 
@@ -135,7 +135,7 @@ class Translation:
         self.original_translit = ''
 
         for sentence in _list(_list_get(json_obj, 0)):
-            if type(sentence) is not list:
+            if isinstance(sentence, list):
                 continue
             if len(sentence) == 2:
                 self.translation += _str(sentence[0])
