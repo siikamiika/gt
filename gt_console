@@ -72,6 +72,10 @@ environment variables:
                         action='store_true',
                         help='suggect the original language(s)')
 
+    parser.add_argument('-L', '--interface-lang',
+                        help='specify the interface language (that is, language'
+                             ' of speech part names)')
+
     parser.add_argument('source_lang',
                         help='source language code, or \'auto\' to auto-detect')
     parser.add_argument('target_lang',
@@ -104,7 +108,7 @@ environment variables:
             include_synonyms=args.synonyms,
             suggest_language=args.suggest_lang,
             correct_typos=args.correct,
-            interface_lang=None)
+            interface_lang=args.interface_lang)
 
     translation = get_translation(args.source_lang, args.target_lang, args.text)
 

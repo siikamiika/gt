@@ -53,6 +53,10 @@ map the "see also" list to notification actions.
     "yes": map all;
     <number>: map first <number> entries only.''')
 
+    parser.add_argument('-L', '--interface-lang',
+                        help='specify the interface language (that is, language'
+                             ' of speech part names)')
+
     parser.add_argument('source_lang',
                         help='source language code, or \'auto\' to auto-detect')
     parser.add_argument('target_lang',
@@ -77,7 +81,7 @@ map the "see also" list to notification actions.
             include_segments=False, include_examples=False,
             include_definitions=False, include_see_also=bool(args.see_also),
             include_synonyms=False, suggest_language=True,
-            correct_typos=False, interface_lang=None)
+            correct_typos=False, interface_lang=args.interface_lang)
 
     def show_notification(source_lang, target_lang, text):
         translation = get_translation(source_lang, target_lang, text)
@@ -101,7 +105,7 @@ map the "see also" list to notification actions.
 
         for speech_part_variant in translation.speech_part_variants:
             variants = [v.translation for v in speech_part_variant.variants]
-            message += '\n\n<u>{}s</u>: {}'.format(
+            message += '\n\n<u>{}</u>: {}'.format(
                 html_escape(speech_part_variant.speech_part),
                 html_escape(', '.join(variants)))
 
