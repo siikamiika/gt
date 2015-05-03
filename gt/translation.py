@@ -135,7 +135,7 @@ class Translation:
         self.original_translit = ''
 
         for sentence in _list(_list_get(json_obj, 0)):
-            if isinstance(sentence, list):
+            if not isinstance(sentence, list):
                 continue
             if len(sentence) == 2:
                 self.translation += _str(sentence[0])
