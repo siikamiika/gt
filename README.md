@@ -1,4 +1,4 @@
-# What´s that?
+# What’s that?
 
 * A library that parses Google Translate response intended for evaluation as JavaScript. Its features include:
 
