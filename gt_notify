@@ -3,7 +3,7 @@ import notify2
 import subprocess
 import argparse
 from cgi import escape as html_escape
-from gt import glue
+import gt
 
 class SeeAlso:
     NO = -1
@@ -75,7 +75,7 @@ map the "see also" list to notification actions.
                  mainloop='glib' if messing_with_mainloop else None)
 
     def get_translation(source_lang, target_lang, text):
-        return glue.get_translation(
+        return gt.get_translation(
             source_lang=source_lang, target_lang=target_lang, text=text,
             include_translit=args.translit, include_variants=True,
             include_segments=False, include_examples=False,

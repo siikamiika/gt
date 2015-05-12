@@ -2,7 +2,7 @@
 import os
 import sys
 import argparse
-from gt import glue
+import gt
 
 def parse_colors(colors):
     return dict(kv.split('=', 1) for kv in colors.split(':') if '=' in kv)
@@ -97,7 +97,7 @@ environment variables:
         return text
 
     def get_translation(source_lang, target_lang, text):
-        return glue.get_translation(
+        return gt.get_translation(
             source_lang, target_lang, text,
             include_translit=args.translit,
             include_variants=not args.result_only,
