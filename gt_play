@@ -11,7 +11,7 @@ print() {
 # -> text
 # <- url-encoded text
 urlencode() {
-    local LANG=C # Forces splitting strings by bytes, not by Unicode symbols
+    local LC_ALL=C # Forces splitting strings by bytes, not by Unicode symbols
     local symbol result
     local -i i len=${#1}
     for (( i = 0; i < len; ++i )); do
