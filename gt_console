@@ -33,6 +33,10 @@ environment variables:
 ''',
         formatter_class=argparse.RawTextHelpFormatter)
 
+    parser.add_argument('-T', '--source-translit',
+                        action='store_true',
+                        help='show source transliteration')
+
     parser.add_argument('-t', '--translit',
                         action='store_true',
                         help='show translation transliteration')
@@ -99,7 +103,7 @@ environment variables:
     def get_translation(source_lang, target_lang, text):
         return gt.get_translation(
             source_lang, target_lang, text,
-            include_translit=args.translit,
+            include_translit=args.translit or args.source_translit,
             include_variants=not args.result_only,
             include_segments=False,
             include_examples=args.examples,
@@ -134,10 +138,13 @@ environment variables:
             print(colorize('no', 'Language(s) suggested: {}'.format(
                 ', '.join(lang_suggests))))
 
+    if args.source_translit and translation.original_translit:
+        print(colorize('tr', translation.original_translit))
+
     print(translation.translation)
 
-    if translation.translation_translit:
-        print(colorize('tr', format(translation.translation_translit)))
+    if args.translit and translation.translation_translit:
+        print(colorize('tr', translation.translation_translit))
 
     if translation.speech_part_variants:
         for speech_part_variants in translation.speech_part_variants:

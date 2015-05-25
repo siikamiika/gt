@@ -40,12 +40,16 @@ def main():
                         default='primary',
                         help='specify a selection buffer to read from')
 
-    parser.add_argument('-T', '--timeout', type=float, default=0,
+    parser.add_argument('--timeout', type=float, default=0,
                         help='notification timeout or 0 (default) to show '
                              'forever')
 
+    parser.add_argument('-T', '--source-translit', action='store_true',
+                        help='include source transliteration')
+
     parser.add_argument('-t', '--translit', action='store_true',
                         help='include translation transliteration')
+
     parser.add_argument('-a', '--see-also', metavar='{no,yes,<number>}',
                         type=SeeAlso, default='no', help='''\
 map the "see also" list to notification actions.
@@ -77,11 +81,16 @@ map the "see also" list to notification actions.
     def get_translation(source_lang, target_lang, text):
         return gt.get_translation(
             source_lang=source_lang, target_lang=target_lang, text=text,
-            include_translit=args.translit, include_variants=True,
-            include_segments=False, include_examples=False,
-            include_definitions=False, include_see_also=bool(args.see_also),
-            include_synonyms=False, suggest_language=True,
-            correct_typos=False, interface_lang=args.interface_lang)
+            include_translit=args.translit or args.source_translit,
+            include_variants=True,
+            include_segments=False,
+            include_examples=False,
+            include_definitions=False,
+            include_see_also=bool(args.see_also),
+            include_synonyms=False,
+            suggest_language=True,
+            correct_typos=False,
+            interface_lang=args.interface_lang)
 
     def show_notification(source_lang, target_lang, text):
         translation = get_translation(source_lang, target_lang, text)
@@ -89,17 +98,22 @@ map the "see also" list to notification actions.
         notification = notify2.Notification(summary=None)
         notification.timeout = args.timeout or notify2.EXPIRES_NEVER
 
-        summary = ''
+        summary, message = '', ''
+
         if args.source_lang == 'auto':
             summary += '(Language detected: {})'.format(
                 html_escape(translation.source_lang))
 
-        if translation.speech_part_variants:
-            message = '<b>{}</b>'.format(html_escape(translation.translation))
-        else:
-            message = html_escape(translation.translation)
+        if args.source_translit and translation.original_translit:
+            message += '<i>{}</i>\n'.format(html_escape(
+                translation.original_translit))
 
-        if translation.translation_translit:
+        if translation.speech_part_variants:
+            message += '<b>{}</b>'.format(html_escape(translation.translation))
+        else:
+            message += html_escape(translation.translation)
+
+        if args.translit and translation.translation_translit:
             message += '\n<i>{}</i>'.format(html_escape(
                 translation.translation_translit))
 
