@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
 
-# -> [argument[, argument [...]]]
-# <- arguments separated by $IFS
+# TAKES:
+#     $1 - text
+# PRINTS:
+#     text
 print() {
-    printf '%s\n' "$*"
+    printf '%s\n' "$1"
 }
 
 ################################################################################
 
-# -> text
-# <- url-encoded text
+# TAKES:
+#     $1 - text
+# PRINTS:
+#     URL-encoded text
 urlencode() {
     local LC_ALL=C # Forces splitting strings by bytes, not by Unicode symbols
     local symbol result
@@ -24,8 +28,12 @@ urlencode() {
     print "$result"
 }
 
-# -> language, text, encoding
-# <- URL
+# TAKES:
+#     $1 - language code
+#     $2 - text
+#     $3 - encoding
+# PRINTS:
+#     voice URL
 get_voice_url() {
     local text=$2
     if (( ${#text} > 100 )); then
@@ -40,8 +48,13 @@ get_voice_url() {
     print "http://translate.google.com/translate_tts?ie=$enc&tl=$lang&q=$text"
 }
 
-# -> binary[, binary[ ...]]
-# <- first binary present in $PATH, or nothing
+# TAKES:
+#     $@ - binary names
+# PRINTS:
+#     first binary name found in PATH
+# RETURNS:
+#     0 - if a binary was found and printed
+#     1 - otherwise
 select_binary() {
     local binary
     for binary; do
@@ -70,7 +83,13 @@ EXAMPLES:
     exit 2
 }
 
-# -> (similar to "get_voice_url")
+# TAKES:
+#     $1 - language code
+#     $2 - text
+#     $3 - encoding
+# RETURNS:
+#     0 - if everything is OK
+#    >0 - if no downloaders were found or if a downloader failed
 download() {
     local -a downloader
     # Replace all slashes with underscopes
@@ -89,7 +108,13 @@ download() {
     "${downloader[@]}" "$(get_voice_url "$@")"
 }
 
-# -> (similar to "get_voice_url")
+# TAKES:
+#     $1 - language code
+#     $2 - text
+#     $3 - encoding
+# RETURNS:
+#     0 - if everything is ok
+#    >0 - if $player is empty and can't be auto-detected or if it failed
 play() {
     # Try to grab $PLAYER environment variable
     [[ -z $player ]] && player=$PLAYER
