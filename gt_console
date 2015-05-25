@@ -147,40 +147,36 @@ environment variables:
         print(colorize('tr', translation.translation_translit))
 
     if translation.speech_part_variants:
-        for speech_part_variants in translation.speech_part_variants:
+        for spv in translation.speech_part_variants:
             if args.extended:
-                print(' {}:'.format(colorize(
-                    'sp', speech_part_variants.speech_part)))
-
-                for varaint in speech_part_variants.variants:
+                print(' {}:'.format(colorize('sp', spv.speech_part)))
+                for varaint in spv.variants:
                     print('  {}: {}'.format(
                         colorize('tv', varaint.translation),
                         colorize('os', ', '.join(varaint.synonyms))))
             else:
-                variants = (v.translation for v
-                            in speech_part_variants.variants)
+                variants = (v.translation for v in spv.variants)
                 print(' {}: {}'.format(
-                    colorize('sp', speech_part_variants.speech_part),
+                    colorize('sp', spv.speech_part),
                     colorize('tv', ', '.join(variants))))
 
     if translation.examples:
         print('\n{}:'.format(colorize('he', 'Examples')))
         for ex in translation.examples:
             if ansi_capable and 'bo' in colors:
-                bold_start, bold_end = '\033[{}m'.format(colors['bo']), \
-                                       '\033[0m'
+                bold_beg, bold_end = '\033[{}m'.format(colors['bo']), '\033[0m'
             else:
-                bold_start, bold_end = '', ''
-            example = ex.example_html \
-                .replace('<b>', bold_start) \
+                bold_beg, bold_end = '', ''
+            example = ex.example_html     \
+                .replace('<b>', bold_beg) \
                 .replace('</b>', bold_end)
             print(' {}'.format(example))
 
     if translation.speech_part_definitions:
         print('\n{}:'.format(colorize('he', 'Definitions')))
-        for speech_part_def in translation.speech_part_definitions:
-            print(' {}:'.format(colorize('sp', speech_part_def.speech_part)))
-            for definition in speech_part_def.definitions:
+        for spd in translation.speech_part_definitions:
+            print(' {}:'.format(colorize('sp', spd.speech_part)))
+            for definition in spd.definitions:
                 if definition.example:
                     print('  {} -- {}'.format(
                         definition.definition,
@@ -191,8 +187,9 @@ environment variables:
     if translation.speech_part_synonyms:
         print('\n{}:'.format(colorize('he', 'Synonyms')))
         for synonyms in translation.speech_part_synonyms:
-            print(' {}: {}'.format(colorize('sp', synonyms.speech_part),
-                                   ', '.join(synonyms.synonyms)))
+            print(' {}: {}'.format(
+                colorize('sp', synonyms.speech_part),
+                ', '.join(synonyms.synonyms)))
 
     if translation.see_also:
         print('\n{}:'.format(colorize('he', 'See also')))
