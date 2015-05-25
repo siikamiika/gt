@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+if (( $# < 2 )); then
+    echo >&2 "USAGE: ${0##*/} [<gt options>] source_lang target_lang"
+    exit 2
+fi
+
+IFS= read -rd '' dirname < <(dirname -z -- "$0")
+gt_console=$dirname/gt_console
+
+if ! [[ -x $gt_console ]]; then
+    echo >&2 "E: '$gt_console' does not exist."
+    exit 1
+fi
+
+while IFS= read -r -p'> ' line; do
+    "$gt_console" "$@" -- "$line"
+done

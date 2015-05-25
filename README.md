@@ -22,6 +22,8 @@ The `languages` script can be used for fetching the abbreviation/language list (
 
 The `gt_play` script can be used for playing back/downloading voice using Google Translate voice synthesizer.
 
+The `gt_shell` script can be used for launching the interactive “read-translate-print-loop” shell.
+
 # Screenshots
 
 ### Command-line interface
