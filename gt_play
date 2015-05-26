@@ -74,7 +74,7 @@ USAGE: ${0##*/} [-gd] [-p PLAYER] [-e ENCODING] [--] LANG TEXT
 OPTIONS:
     -g: print voice URL, do not play
     -g: download, do not play
-    -p: specify a player (default: guess from \$PLAYER, mplayer, mplayer2, mpv)
+    -p: specify a player (default: guess from \$PLAYER, mpv, mplayer2, mplayer)
     -e: specify TEXT encoding (default: UTF-8)
 
 EXAMPLES:
@@ -133,13 +133,7 @@ play() {
         return 1
     fi
 
-    # Save old settings
-    local old_sets=$-
-    # Disable globbing
-    set -f
     $player "$(get_voice_url "$@")"
-    # And enable back if was enabled
-    [[ $old_sets != *f* ]] && set +f
 }
 
 action=play
