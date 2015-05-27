@@ -3,16 +3,6 @@
 # TAKES:
 #     $1 - text
 # PRINTS:
-#     text
-print() {
-    printf '%s\n' "$1"
-}
-
-################################################################################
-
-# TAKES:
-#     $1 - text
-# PRINTS:
 #     URL-encoded text
 urlencode() {
     local LC_ALL=C # Forces splitting strings by bytes, not by Unicode symbols
@@ -25,7 +15,7 @@ urlencode() {
         fi
         result+=$symbol
     done
-    print "$result"
+    printf '%s\n' "$result"
 }
 
 # TAKES:
@@ -37,7 +27,7 @@ urlencode() {
 get_voice_url() {
     local text=$2
     if (( ${#text} > 100 )); then
-        print >&2 "W: text is too big (${#text}/100), cutting down."
+        echo >&2 "W: text is too big (${#text}/100), cutting down."
         text=${text:0:100}
     fi
     local text=$(urlencode "$text")
@@ -45,7 +35,8 @@ get_voice_url() {
     local enc=$3
     local lang=$1
 
-    print "http://translate.google.com/translate_tts?ie=$enc&tl=$lang&q=$text"
+    printf '%s\n' \
+        "http://translate.google.com/translate_tts?ie=$enc&tl=$lang&q=$text"
 }
 
 # TAKES:
@@ -59,7 +50,7 @@ select_binary() {
     local binary
     for binary; do
         hash -- "$binary" 2>/dev/null || continue
-        print "$binary"
+        printf '%s\n' "$binary"
         return
     done
     return 1
@@ -68,7 +59,7 @@ select_binary() {
 ################################################################################
 
 usage() {
-    print >&2 "\
+    cat >&2 <<EOF
 USAGE: ${0##*/} [-gd] [-p PLAYER] [-e ENCODING] [--] LANG TEXT
 
 OPTIONS:
@@ -79,7 +70,7 @@ OPTIONS:
 
 EXAMPLES:
     ${0##*/} en party; ${0##*/} en_US party
-"
+EOF
     exit 2
 }
 
@@ -101,7 +92,7 @@ download() {
     elif hash curl 2>/dev/null; then
         downloader=( curl -# -o"$filename" -A"$useragent" )
     else
-        print >&2 'E: neither wget nor curl were found.'
+        echo >&2 'E: neither wget nor curl were found.'
         return 1
     fi
 
@@ -129,7 +120,7 @@ play() {
     fi
 
     if [[ -z $player ]]; then
-        print >&2 "E: cannot auto-detect player."
+        echo >&2 "E: cannot auto-detect player."
         return 1
     fi
 
