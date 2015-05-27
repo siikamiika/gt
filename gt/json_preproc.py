@@ -32,7 +32,7 @@ def preprocess(source):
         COMMA = 2
         """We're inside a string; going to wait for an unescaped comma"""
         STRING = 3
-        """We're inside a string, previos character is a backslash"""
+        """We're inside a string, previous character is a backslash"""
         STRING_ESCAPE = 4
 
     state = ParserState.NORMAL

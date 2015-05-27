@@ -92,7 +92,7 @@ EXAMPLES:
 #    >0 - if no downloaders were found or if a downloader failed
 download() {
     local -a downloader
-    # Replace all slashes with underscopes
+    # Replace all slashes with underscores
     local filename=${2//\//_}.mp3
     local useragent='Mozilla/5.0'
 
@@ -113,7 +113,7 @@ download() {
 #     $2 - text
 #     $3 - encoding
 # RETURNS:
-#     0 - if everything is ok
+#     0 - if everything is OK
 #    >0 - if $player is empty and can't be auto-detected or if it failed
 play() {
     # Try to grab $PLAYER environment variable
@@ -122,7 +122,7 @@ play() {
     # Try to select player from $PATH
     if [[ -z $player ]]; then
         player=$(select_binary mpv mplayer2 mplayer)
-        # Disable mpv's ytdl hook: if mpv was chosed by select_binary, and it
+        # Disable mpv's ytdl hook: if mpv was chosen by select_binary, and it
         # does support the `--no-ytdl' option, pass it.
         [[ $player == mpv ]] && mpv --no-ytdl >/dev/null 2>/dev/null \
             && player='mpv --no-ytdl'

@@ -23,7 +23,7 @@ environment variables:
 
         The following parts of output are supported:
             no  notice
-            tr  translit
+            tr  transliteration
             sp  speech part name
             tv  speech part-specific translation variant
             os  synonym in original language
@@ -74,7 +74,7 @@ environment variables:
 
     parser.add_argument('-l', '--suggest-lang',
                         action='store_true',
-                        help='suggect the original language(s)')
+                        help='suggest the original language(s)')
 
     parser.add_argument('-L', '--interface-lang',
                         help='specify the interface language (that is, language'
