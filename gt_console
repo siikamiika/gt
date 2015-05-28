@@ -159,10 +159,10 @@ environment variables:
         for spv in translation.speech_part_variants:
             if args.extended:
                 print(' {}:'.format(colorize('sp', spv.speech_part)))
-                for varaint in spv.variants:
+                for variant in spv.variants:
                     print('  {}: {}'.format(
-                        colorize('tv', varaint.translation),
-                        colorize('os', ', '.join(varaint.synonyms))))
+                        colorize('tv', variant.translation),
+                        colorize('os', ', '.join(variant.synonyms))))
             else:
                 variants = (v.translation for v in spv.variants)
                 print(' {}: {}'.format(
