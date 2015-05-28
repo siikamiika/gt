@@ -2,7 +2,7 @@
 import notify2
 import subprocess
 import argparse
-from cgi import escape as html_escape
+from html import escape as html_escape
 import gt
 
 class SeeAlso:
