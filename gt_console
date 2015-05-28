@@ -5,7 +5,17 @@ import argparse
 import gt
 
 def parse_colors(colors):
+    """
+    Creates a dictionary from a string contains 'key=value' segments delimited
+    by ';', simply ignoring segments that don't contain '='.
+    """
     return dict(kv.split('=', 1) for kv in colors.split(':') if '=' in kv)
+
+def term_ansi_capable():
+    return os.getenv('TERM') not in [None, '', 'dumb']
+
+def stream_ansi_capable(stream):
+    return hasattr(stream, 'isatty') and stream.isatty()
 
 DEFAULT_COLORS = 'no=1;33:tr=32:sp=1;34:tv=1;31:os=:he=1;32:ex=33:bo=1;4'
 
@@ -89,8 +99,7 @@ environment variables:
 
     args = parser.parse_args()
 
-    ansi_capable = sys.stdout.isatty() and \
-                   os.getenv('TERM') not in [None, 'dumb']
+    ansi_capable = stream_ansi_capable(sys.stdout) and term_ansi_capable()
 
     colors = parse_colors(DEFAULT_COLORS)
     colors.update(parse_colors(os.getenv('GT_COLORS', '')))

@@ -1,4 +1,6 @@
-"""This module contains an URL construction and fetching function."""
+"""
+This module contains an URL construction and fetching function.
+"""
 from urllib.parse import quote_plus
 from urllib.request import Request, urlopen
 
@@ -11,7 +13,8 @@ def fetch_response(source_lang, target_lang, text,
                    include_see_also=False, include_synonyms=False,
                    suggest_language=False, correct_typos=False,
                    interface_lang=None):
-    """Fetches Google Translate's response as a string.
+    """
+    Fetches Google Translate's response as a string.
 
     Args:
         source_lang: source language code
@@ -30,6 +33,9 @@ def fetch_response(source_lang, target_lang, text,
         correct_typos: suggest typo fixes
         interface_lang: code of a language will be used to name speech parts
             (default: English)
+
+    Returns:
+        response as a string
     """
     url = 'http://translate.google.com/translate_a/single?client=t'
     url += '&sl=' + quote_plus(source_lang) + \

@@ -6,26 +6,31 @@ from cgi import escape as html_escape
 import gt
 
 class SeeAlso:
-    NO = -1
-    YES = -2
+    """Wrapper for '--see-also' argument value"""
+    VALUE_NO = -1
+    VALUE_YES = -2
 
     def __init__(self, arg):
         if arg == 'no':
-            self.value = SeeAlso.NO
+            self.value = SeeAlso.VALUE_NO
         elif arg == 'yes':
-            self.value = SeeAlso.YES
+            self.value = SeeAlso.VALUE_YES
         else:
             self.value = int(arg)
             if self.value < 0:
                 raise ValueError('--see-also argument is negative')
 
     def __bool__(self):
-        return self.value != SeeAlso.NO
+        return self.value != SeeAlso.VALUE_NO
 
     def slice_off(self, see_also):
-        if self.value == SeeAlso.NO:
+        """
+        Returns a slice of a see_also array to be mapped to notification actions
+        according to argument value.
+        """
+        if self.value == SeeAlso.VALUE_NO:
             return []
-        elif self.value == SeeAlso.YES:
+        elif self.value == SeeAlso.VALUE_YES:
             return see_also
         else:
             return see_also[:self.value]

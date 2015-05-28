@@ -1,10 +1,12 @@
-"""This module contains data structures that reflect Google Translate
-response."""
+"""
+This module contains data structures that reflect Google Translate response.
+"""
 
 def _list_get(obj, *indices):
-    """Safely obtains an object from nested lists. Returns None in case of
-    an error - that is, if on some step an object fetched is not a list or
-    the next index is invalid.
+    """
+    Safely obtains an object from nested lists. Returns None in case of an
+    error - that is, if on some step an object fetched is not a list or if the
+    next index is invalid.
 
     >>> _list_get([1, 2, 3], 2)
     3
@@ -22,16 +24,18 @@ def _list_get(obj, *indices):
     return obj
 
 def _list(obj):
-    """Returns the original object if it is a list, or an empty list."""
+    """
+    Returns the original object if it is a list, or an empty list.
+    """
     return obj if isinstance(obj, list) else []
 
 def _str(obj):
-    """Returns the original object if it is an string object, or an empty
-    string."""
+    """
+    Returns the original object if it is an string object, or an empty string.
+    """
     return obj if isinstance(obj, str) else ''
 
 class SpeechPartSpecificVariants:
-
     class SpeechPartSpecificVariant:
         translation = None
         synonyms = None
@@ -47,8 +51,8 @@ class SpeechPartSpecificVariants:
 
     def __init__(self, json_obj):
         self.speech_part = _list_get(json_obj, 0)
-        self.variants = list(map(self.SpeechPartSpecificVariant,
-                                 _list(_list_get(json_obj, 2))))
+        self.variants = [self.SpeechPartSpecificVariant(obj) for obj
+                         in _list(_list_get(json_obj, 2))]
 
 class SegmentTranslation:
     original_segment = None
@@ -56,8 +60,8 @@ class SegmentTranslation:
 
     def __init__(self, json_obj):
         self.original_segment = _list_get(json_obj, 0)
-        self.translations = list(map(lambda obj: _list_get(obj, 0),
-                                     _list(_list_get(json_obj, 2))))
+        self.translations = [_list_get(obj, 0) for obj
+                             in _list(_list_get(json_obj, 2))]
 
 class LanguageSuggestion:
     language = None
@@ -78,7 +82,6 @@ class SpeechPartSpecificSynonyms:
         self.dict_entry = _list_get(json_obj, 1, 0, 1)
 
 class SpeechPartSpecificDefinitions:
-
     class SpeechPartSpecificDefinition:
         definition = None
         dict_entry = None
@@ -94,8 +97,8 @@ class SpeechPartSpecificDefinitions:
 
     def __init__(self, json_obj):
         self.speech_part = _list_get(json_obj, 0)
-        self.definitions = list(map(self.SpeechPartSpecificDefinition,
-                                    _list(_list_get(json_obj, 1))))
+        self.definitions = [self.SpeechPartSpecificDefinition(obj) for obj
+                            in _list(_list_get(json_obj, 1))]
 
 class UsageExample:
     example_html = None
@@ -106,6 +109,14 @@ class UsageExample:
         self.dict_entry = _list_get(json_obj, 5)
 
 class Correction:
+    """
+    Correction.
+
+    corrected_text is 'None' when no corrections were made.
+
+    corrected_html can be 'None' when corrected_text is not - e.g. when Google
+    Translate "corrects" a transliteration to a different writing system.
+    """
     corrected_text = None
     corrected_html = None
 
@@ -144,23 +155,30 @@ class Translation:
                 self.translation_translit += _str(sentence[2])
                 self.original_translit += _str(sentence[3])
 
-        self.speech_part_variants = list(map(SpeechPartSpecificVariants,
-                                             _list(_list_get(json_obj, 1))))
+        self.speech_part_variants = [SpeechPartSpecificVariants(obj) for obj
+                                     in _list(_list_get(json_obj, 1))]
+
         self.source_lang = _list_get(json_obj, 2)
-        self.segments = list(map(SegmentTranslation,
-                                 _list(_list_get(json_obj, 5))))
+
+        self.segments = [SegmentTranslation(obj) for obj
+                         in _list(_list_get(json_obj, 5))]
+
         self.correction = Correction(_list_get(json_obj, 7))
 
         self.lang_suggests = [LanguageSuggestion(lang, weight) for lang, weight
                               in zip(_list(_list_get(json_obj, 8, 0)),
                                      _list(_list_get(json_obj, 8, 2)))]
 
-        self.speech_part_synonyms = list(map(SpeechPartSpecificSynonyms,
-                                             _list(_list_get(json_obj, 11))))
-        self.speech_part_definitions = list(map(SpeechPartSpecificDefinitions,
-                                                _list(_list_get(json_obj, 12))))
-        self.examples = list(map(UsageExample,
-                                 _list(_list_get(json_obj, 13, 0))))
+        self.speech_part_synonyms = [SpeechPartSpecificSynonyms(obj) for obj
+                                     in _list(_list_get(json_obj, 11))]
+
+        self.speech_part_definitions = [SpeechPartSpecificDefinitions(obj)
+                                        for obj in _list(
+                                            _list_get(json_obj, 12))]
+
+        self.examples = [UsageExample(obj) for obj
+                         in _list(_list_get(json_obj, 13, 0))]
+
         self.see_also = _list(_list_get(json_obj, 14, 0))
 
 if __name__ == '__main__':

@@ -1,13 +1,20 @@
-"""This module contains the `preprocess' function that converts JavaScript
-objects into JSON ones."""
+"""
+This module contains the 'preprocess' function that converts JavaScript objects
+into JSON ones.
+"""
 
 def preprocess(source):
-    """Converts JavaScript-compatible data structures sent by Google Translate
-    to a valid JSON.
-
+    """
+    Converts JavaScript-compatible nested arrays to a valid JSON.
     The only known differences are:
-        * omitting of 'null' inside arrays;
-        * an optional meaningless comma before ']'.
+        - omitting of 'null' inside arrays
+        - an optional meaningless comma before ']'
+
+    Args:
+        source: JavaScript-compatible nested arrays string
+
+    Returns:
+        valid JSON string
 
     >>> preprocess('[1,,2]')
     '[1,null,2]'
@@ -26,13 +33,16 @@ def preprocess(source):
     """
 
     class ParserState:
-        """Going to append next symbol as-is"""
+        """
+        A namespace for an enumeration.
+        """
+        # Going to append next symbol as-is
         NORMAL = 1
-        """Going to append 'null' if the next symbol is comma"""
+        # Going to append 'null' if the next symbol is comma
         COMMA = 2
-        """We're inside a string; going to wait for an unescaped comma"""
+        # We're inside a string; going to wait for an unescaped comma
         STRING = 3
-        """We're inside a string, previous character is a backslash"""
+        # We're inside a string, previous character is a backslash
         STRING_ESCAPE = 4
 
     state = ParserState.NORMAL
