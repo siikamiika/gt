@@ -8,6 +8,5 @@ setup(name='gt',
       url='https://github.com/shdown/gt',
       license='LGPLv3',
       packages=['gt'],
-      scripts=['gt_console', 'gt_notify', 'gt_dump_json', 'gt_play',
-               'gt_shell'],
+      scripts=['gt_console', 'gt_notify', 'gt_dump_json', 'gt_play'],
      )

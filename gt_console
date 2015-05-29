@@ -95,6 +95,7 @@ environment variables:
     parser.add_argument('target_lang',
                         help='target language code')
     parser.add_argument('text',
+                        nargs='*',
                         help='text to translate')
 
     args = parser.parse_args()
@@ -123,85 +124,105 @@ environment variables:
             correct_typos=args.correct,
             interface_lang=args.interface_lang)
 
-    translation = get_translation(args.source_lang, args.target_lang, args.text)
-
-    if translation.correction.corrected_text:
-        if translation.correction.corrected_html:
-            typos_n = translation.correction.corrected_html.count('<b><i>')
-            print(colorize('no', 'Typo(s) corrected: {}'.format(typos_n)))
-        else:
-            print(colorize('no', 'Text was corrected'))
-
-        translation = get_translation(args.source_lang, args.target_lang,
-                                      translation.correction.corrected_text)
-
-    if args.source_lang == 'auto':
-        print(colorize('no', 'Language detected: {}'.format(
-            translation.source_lang)))
-
-    if args.suggest_lang:
-        lang_suggests = [s.language for s in translation.lang_suggests]
-        if not lang_suggests:
-            print(colorize('no', 'No languages were suggested'))
-        elif lang_suggests != [translation.source_lang]:
-            print(colorize('no', 'Language(s) suggested: {}'.format(
-                ', '.join(lang_suggests))))
-
-    if args.source_translit and translation.original_translit:
-        print(colorize('tr', translation.original_translit))
-
-    print(translation.translation)
-
-    if args.translit and translation.translation_translit:
-        print(colorize('tr', translation.translation_translit))
-
-    if translation.speech_part_variants:
-        for spv in translation.speech_part_variants:
-            if args.extended:
-                print(' {}:'.format(colorize('sp', spv.speech_part)))
-                for variant in spv.variants:
-                    print('  {}: {}'.format(
-                        colorize('tv', variant.translation),
-                        colorize('os', ', '.join(variant.synonyms))))
+    def print_translation(translation):
+        if translation.correction.corrected_text:
+            if translation.correction.corrected_html:
+                typos_n = translation.correction.corrected_html.count('<b><i>')
+                print(colorize('no', 'Typo(s) corrected: {}'.format(typos_n)))
             else:
-                variants = (v.translation for v in spv.variants)
-                print(' {}: {}'.format(
-                    colorize('sp', spv.speech_part),
-                    colorize('tv', ', '.join(variants))))
+                print(colorize('no', 'Text was corrected'))
 
-    if translation.examples:
-        if ansi_capable and 'bo' in colors:
-            bold_beg, bold_end = '\033[{}m'.format(colors['bo']), '\033[0m'
-        else:
-            bold_beg, bold_end = '', ''
-        print('\n{}:'.format(colorize('he', 'Examples')))
-        for example in translation.examples:
-            pretty_str = example.example_html.replace('<b>', bold_beg) \
-                                             .replace('</b>', bold_end)
-            print(' {}'.format(pretty_str))
+            translation = get_translation(args.source_lang, args.target_lang,
+                                          translation.correction.corrected_text)
 
-    if translation.speech_part_definitions:
-        print('\n{}:'.format(colorize('he', 'Definitions')))
-        for spd in translation.speech_part_definitions:
-            print(' {}:'.format(colorize('sp', spd.speech_part)))
-            for definition in spd.definitions:
-                if definition.example:
-                    print('  {} -- {}'.format(
-                        definition.definition,
-                        colorize('ex', definition.example)))
+        if args.source_lang == 'auto':
+            print(colorize('no', 'Language detected: {}'.format(
+                translation.source_lang)))
+
+        if args.suggest_lang:
+            lang_suggests = [s.language for s in translation.lang_suggests]
+            if not lang_suggests:
+                print(colorize('no', 'No languages were suggested'))
+            elif lang_suggests != [translation.source_lang]:
+                print(colorize('no', 'Language(s) suggested: {}'.format(
+                    ', '.join(lang_suggests))))
+
+        if args.source_translit and translation.original_translit:
+            print(colorize('tr', translation.original_translit))
+
+        print(translation.translation)
+
+        if args.translit and translation.translation_translit:
+            print(colorize('tr', translation.translation_translit))
+
+        if translation.speech_part_variants:
+            for spv in translation.speech_part_variants:
+                if args.extended:
+                    print(' {}:'.format(colorize('sp', spv.speech_part)))
+                    for variant in spv.variants:
+                        print('  {}: {}'.format(
+                            colorize('tv', variant.translation),
+                            colorize('os', ', '.join(variant.synonyms))))
                 else:
-                    print('  {}'.format(definition.definition))
+                    variants = (v.translation for v in spv.variants)
+                    print(' {}: {}'.format(
+                        colorize('sp', spv.speech_part),
+                        colorize('tv', ', '.join(variants))))
 
-    if translation.speech_part_synonyms:
-        print('\n{}:'.format(colorize('he', 'Synonyms')))
-        for synonyms in translation.speech_part_synonyms:
-            print(' {}: {}'.format(
-                colorize('sp', synonyms.speech_part),
-                ', '.join(synonyms.synonyms)))
+        if translation.examples:
+            if ansi_capable and 'bo' in colors:
+                bold_beg, bold_end = '\033[{}m'.format(colors['bo']), '\033[0m'
+            else:
+                bold_beg, bold_end = '', ''
+            print('\n{}:'.format(colorize('he', 'Examples')))
+            for example in translation.examples:
+                pretty_str = example.example_html.replace('<b>', bold_beg) \
+                                                 .replace('</b>', bold_end)
+                print(' {}'.format(pretty_str))
 
-    if translation.see_also:
-        print('\n{}:'.format(colorize('he', 'See also')))
-        print(' {}'.format(', '.join(translation.see_also)))
+        if translation.speech_part_definitions:
+            print('\n{}:'.format(colorize('he', 'Definitions')))
+            for spd in translation.speech_part_definitions:
+                print(' {}:'.format(colorize('sp', spd.speech_part)))
+                for definition in spd.definitions:
+                    if definition.example:
+                        print('  {} -- {}'.format(
+                            definition.definition,
+                            colorize('ex', definition.example)))
+                    else:
+                        print('  {}'.format(definition.definition))
+
+        if translation.speech_part_synonyms:
+            print('\n{}:'.format(colorize('he', 'Synonyms')))
+            for synonyms in translation.speech_part_synonyms:
+                print(' {}: {}'.format(
+                    colorize('sp', synonyms.speech_part),
+                    ', '.join(synonyms.synonyms)))
+
+        if translation.see_also:
+            print('\n{}:'.format(colorize('he', 'See also')))
+            print(' {}'.format(', '.join(translation.see_also)))
+
+
+    if args.text:
+        translation = get_translation(args.source_lang, args.target_lang,
+                                      ' '.join(args.text))
+        print_translation(translation)
+    else:
+        try:
+            # input() uses readline if and only if this module is loaded.
+            import readline
+        except ImportError:
+            pass
+        while True:
+            text = None
+            try:
+                text = input('> ')
+            except EOFError:
+                break
+            translation = get_translation(args.source_lang, args.target_lang,
+                                          text)
+            print_translation(translation)
 
 if __name__ == '__main__':
     main()

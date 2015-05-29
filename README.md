@@ -12,7 +12,7 @@
 
     * Typo correction
 
-* A nice command-line interface (`gt_console`);
+* A nice command-line interface (`gt_console`) with interactive shell mode support;
 
 * An xsel+libnotify interface (`gt_notify`) that translates the content of X selection and then shows a notification with translation;
 
@@ -21,8 +21,6 @@
 The `languages` script can be used for fetching the abbreviation/language list (or you can just see [the table](https://github.com/shdown/gt/wiki/Abbreviation%E2%86%92language-correspondence-table)).
 
 The `gt_play` script can be used for playing back/downloading voice using Google Translate voice synthesizer.
-
-The `gt_shell` script can be used for launching the interactive “read-translate-print-loop” shell.
 
 # Screenshots
 
