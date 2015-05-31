@@ -44,12 +44,11 @@ environment variables:
 "text" arguments handling and interactive mode
 
     If multiple "text" arguments given, they are joined by space; that means you
-    may not bother to quote phrases: you can type
-        $ gt en de 'get out'
-    instead of
+    may not bother to quote phrases, i.e. you can type
         $ gt en de get out
-    unless they contain your shell metacharacters (like '?'); btw, in zsh you
-    can put the 'noglob' pre-command modifier in alias.
+    instead of
+        $ gt en de 'get out'
+    Beware of your shell metacharacters (like '?'), though.
 
     If no "text" arguments given, the program will start in an interactive mode.
     You can quit the interactive shell mode by sending an EOF (typically Ctrl-D).
