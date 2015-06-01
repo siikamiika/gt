@@ -44,11 +44,11 @@ environment variables:
 "text" arguments handling and interactive mode
 
     If multiple "text" arguments given, they are joined by space; that means you
-    may not bother to quote phrases, i.e. you can type
+    don't need to quote phrases, i.e. you can type
         $ gt en de get out
     instead of
         $ gt en de 'get out'
-    Beware of your shell metacharacters (like '?'), though.
+    Beware of your shell metacharacters, though.
 
     If no "text" arguments given, the program will start in an interactive mode.
     You can quit the interactive shell mode by sending an EOF (typically Ctrl-D).
