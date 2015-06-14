@@ -74,6 +74,10 @@ environment variables:
                            help='show synonyms in source language for each '
                                 'translation variant')
 
+    parser.add_argument('-S', '--segments',
+                        action='store_true',
+                        help='show translation of each text segment')
+
     parser.add_argument('-e', '--examples',
                         action='store_true',
                         help='show usage examples of a given word')
@@ -127,7 +131,7 @@ environment variables:
             source_lang, target_lang, text,
             include_translit=args.translit or args.source_translit,
             include_variants=not args.result_only,
-            include_segments=False,
+            include_segments=args.segments,
             include_examples=args.examples,
             include_definitions=args.definitions,
             include_see_also=args.see_also,
@@ -162,7 +166,18 @@ environment variables:
         if args.source_translit and translation.original_translit:
             print(colorize('tr', translation.original_translit))
 
-        print(translation.translation)
+        if args.segments and translation.segments:
+            for segment in translation.segments:
+                if not segment.translations:
+                    continue
+                if segment.translations[0] == segment.original_segment:
+                    print(segment.translations[0])
+                else:
+                    print('{} {}'.format(
+                        segment.translations[0],
+                        colorize('tv', segment.original_segment)))
+        else:
+            print(translation.translation)
 
         if args.translit and translation.translation_translit:
             print(colorize('tr', translation.translation_translit))
