@@ -30,31 +30,35 @@ The `gt_play` script can be used for playing back/downloading voice using Google
 
 Simple usage:
 
-![1](https://cloud.githubusercontent.com/assets/5462697/7939935/6a51aee0-0956-11e5-831f-d55745c37cf5.png)
+![alt](https://cloud.githubusercontent.com/assets/5462697/7939935/6a51aee0-0956-11e5-831f-d55745c37cf5.png)
 
 If no text given, the program starts in interactive mode:
 
-![2](https://cloud.githubusercontent.com/assets/5462697/7939983/a5a314a2-0956-11e5-91d5-76ae38fb8119.png)
+![alt](https://cloud.githubusercontent.com/assets/5462697/7939983/a5a314a2-0956-11e5-91d5-76ae38fb8119.png)
 
 `--correct`. Note that additional text arguments are joined by space, so you don’t need to quote phrases:
 
-![3](https://cloud.githubusercontent.com/assets/5462697/7939962/8c44f016-0956-11e5-9bf4-a0dc5108cb6b.png)
+![alt](https://cloud.githubusercontent.com/assets/5462697/7939962/8c44f016-0956-11e5-9bf4-a0dc5108cb6b.png)
 
 Bells and whistles:
 
-![4](https://cloud.githubusercontent.com/assets/5462697/7940006/cfc4d7d4-0956-11e5-9728-2bba2aa4ecba.png)
+![alt](https://cloud.githubusercontent.com/assets/5462697/7940006/cfc4d7d4-0956-11e5-9728-2bba2aa4ecba.png)
+
+`--segments`:
+
+![alt](https://cloud.githubusercontent.com/assets/5462697/8230815/5d3b6d36-15cc-11e5-8a43-f63f85e77a27.png)
 
 Transliteration (`-tTr` is for `--translit --source-translit --result-only`):
 
-![5](https://cloud.githubusercontent.com/assets/5462697/7939943/76d44092-0956-11e5-8b0a-7d19d4f78317.png)
+![alt](https://cloud.githubusercontent.com/assets/5462697/7939943/76d44092-0956-11e5-8b0a-7d19d4f78317.png)
 
 Language detection:
 
-![6](https://cloud.githubusercontent.com/assets/5462697/7940291/a106e4da-0958-11e5-893d-16a41184227e.png)
+![alt](https://cloud.githubusercontent.com/assets/5462697/7940291/a106e4da-0958-11e5-893d-16a41184227e.png)
 
 Custom interface language:
 
-![7](https://cloud.githubusercontent.com/assets/5462697/7939975/9bcb580e-0956-11e5-949f-05c5af1b6bb9.png)
+![alt](https://cloud.githubusercontent.com/assets/5462697/7939975/9bcb580e-0956-11e5-949f-05c5af1b6bb9.png)
 
 ### xsel+libnotify interface
 
