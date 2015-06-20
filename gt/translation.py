@@ -31,7 +31,7 @@ def _list(obj):
 
 def _str(obj):
     """
-    Returns the original object if it is an string object, or an empty string.
+    Returns the original object if it is a string, or an empty string.
     """
     return obj if isinstance(obj, str) else ''
 

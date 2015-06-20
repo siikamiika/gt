@@ -6,21 +6,28 @@ import gt
 
 def parse_colors(colors):
     """
-    Creates a dictionary from a string contains 'key=value' segments delimited
+    Creates a dictionary from a string of 'key=value' segments delimited
     by ':', simply ignoring segments that don't contain '='.
     """
     return dict(kv.split('=', 1) for kv in colors.split(':') if '=' in kv)
 
 def term_ansi_capable():
+    """
+    Checks if the terminal is ANSI-capable.
+    """
     return os.getenv('TERM') not in [None, '', 'dumb']
 
 def stream_ansi_capable(stream):
+    """
+    Checks if a stream is ANSI-capable.
+    """
     return hasattr(stream, 'isatty') and stream.isatty()
 
 DEFAULT_COLORS = 'no=1;33:tr=32:sp=1;34:tv=1;31:os=:he=1;32:ex=33:bo=1;4'
 
 def main():
     parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawTextHelpFormatter,
         description='''CLI Google Translate client
 
 environment variables:
@@ -52,8 +59,7 @@ environment variables:
 
     If no "text" arguments given, the program will start in an interactive mode.
     You can quit the interactive shell mode by sending an EOF (typically Ctrl-D).
-''',
-        formatter_class=argparse.RawTextHelpFormatter)
+''')
 
     parser.add_argument('-T', '--source-translit',
                         action='store_true',
@@ -122,6 +128,11 @@ environment variables:
     colors.update(parse_colors(os.getenv('GT_COLORS', '')))
 
     def colorize(color, text):
+        """
+        Wraps text with ANSI escapes corresponding to given "part of output" if
+        ansi_capable flag is True and this part of output is known, or returns
+        unmodified text otherwise.
+        """
         if ansi_capable and color in colors:
             return '\033[{}m{}\033[0m'.format(colors[color], text)
         return text
@@ -203,6 +214,7 @@ environment variables:
                 bold_beg, bold_end = '', ''
             print('\n{}:'.format(colorize('he', 'Examples')))
             for example in translation.examples:
+                # TODO: HTML-unescape
                 pretty_str = example.example_html.replace('<b>', bold_beg) \
                                                  .replace('</b>', bold_end)
                 print(' {}'.format(pretty_str))

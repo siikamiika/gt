@@ -4,9 +4,8 @@ import json
 from gt import network, json_preproc
 
 def main():
-    parser = argparse.ArgumentParser(
-        description='Tool for dumping Google Translate response as a '
-                    'well-formatted JSON')
+    parser = argparse.ArgumentParser(description='''\
+Tool for dumping Google Translate response as a well-formatted JSON''')
 
     parser.add_argument('source_lang',
                         help='source language code, or \'auto\' to auto-detect')
