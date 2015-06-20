@@ -278,6 +278,7 @@ environment variables:
             try:
                 text = input('> ')
             except EOFError:
+                print('')
                 break
             translation = get_translation(args.source_lang, args.target_lang,
                                           text)
