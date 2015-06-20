@@ -3,6 +3,7 @@ import os
 import sys
 import argparse
 import gt
+from html import unescape as html_unescape
 
 def parse_colors(colors):
     """
@@ -137,6 +138,24 @@ environment variables:
             return '\033[{}m{}\033[0m'.format(colors[color], text)
         return text
 
+    def colorize_between(color, begin, end, text, alt_begin='*', alt_end='*'):
+        """
+        Wraps segments of `text' between `begin' and `end' with ANSI escapes
+        corresponding to given "part of output" if ansi_capable flag is True
+        and this part of output is known, or wraps them with `alt_begin' and
+        `alt_end' otherwise.
+        If unmatched `begin' on the end of `text' is detected, the reset ANSI
+        escape or `alt_end' is inserted to the end.
+        """
+        if ansi_capable and color in colors:
+            color_begin, color_end = '\033[{}m'.format(colors[color]), '\033[0m'
+        else:
+            color_begin, color_end = alt_begin, alt_end
+        result = text.replace(begin, color_begin).replace(end, color_end)
+        if text.rfind(begin) > text.rfind(end):
+            result += color_end
+        return result
+
     def get_translation(source_lang, target_lang, text):
         return gt.get_translation(
             source_lang, target_lang, text,
@@ -208,16 +227,10 @@ environment variables:
                         colorize('tv', ', '.join(variants))))
 
         if translation.examples:
-            if ansi_capable and 'bo' in colors:
-                bold_beg, bold_end = '\033[{}m'.format(colors['bo']), '\033[0m'
-            else:
-                bold_beg, bold_end = '', ''
             print('\n{}:'.format(colorize('he', 'Examples')))
             for example in translation.examples:
-                # TODO: HTML-unescape
-                pretty_str = example.example_html.replace('<b>', bold_beg) \
-                                                 .replace('</b>', bold_end)
-                print(' {}'.format(pretty_str))
+                print(' {}'.format(html_unescape(colorize_between(
+                    'bo', '<b>', '</b>', example.example_html))))
 
         if translation.speech_part_definitions:
             print('\n{}:'.format(colorize('he', 'Definitions')))
