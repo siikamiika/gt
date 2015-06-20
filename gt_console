@@ -185,12 +185,13 @@ environment variables:
             translation = get_translation(args.source_lang, args.target_lang,
                                           translation.correction.corrected_text)
 
+        if not translation.source_lang:
+            print(colorize('no',
+                           'Seems that this source language is not supported.'))
+
         if args.source_lang == 'auto':
             print(colorize('no', 'Language detected: {}'.format(
                 translation.source_lang)))
-        elif translation.source_lang != args.source_lang:
-            print(colorize('no',
-                           'Seems that this source language is not supported.'))
 
         if args.suggest_lang:
             lang_suggests = [s.language for s in translation.lang_suggests]
