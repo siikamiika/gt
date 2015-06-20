@@ -205,10 +205,9 @@ environment variables:
 
         if args.segments and translation.segments:
             for segment in translation.segments:
-                if not segment.translations:
-                    continue
-                if segment.translations[0] == segment.original_segment:
-                    print(segment.translations[0])
+                if (not segment.translations or
+                        segment.translations[0] == segment.original_segment):
+                    print(segment.original_segment)
                 else:
                     print('{} {}'.format(
                         segment.translations[0],
