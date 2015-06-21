@@ -1,0 +1,8 @@
+[MASTER]
+ignore=.git
+
+[MESSAGES CONTROL]
+disable=too-many-locals,too-many-branches,too-few-public-methods,too-many-arguments,too-many-instance-attributes,too-many-statements,missing-docstring
+
+[FORMAT]
+indent-string='    '
