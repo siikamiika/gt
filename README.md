@@ -38,7 +38,7 @@ If no text given, the program starts in interactive mode:
 
 `--correct`. Note that additional text arguments are joined by space, so you don’t need to quote phrases:
 
-![alt](https://cloud.githubusercontent.com/assets/5462697/7939962/8c44f016-0956-11e5-9bf4-a0dc5108cb6b.png)
+![alt](https://cloud.githubusercontent.com/assets/5462697/8271850/ffd445c6-1834-11e5-9261-b49a612fb86b.png)
 
 Bells and whistles:
 
