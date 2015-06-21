@@ -131,7 +131,7 @@ map the "see also" list to notification actions.
         if args.see_also:
             see_also = args.see_also.slice_off(translation.see_also)
 
-            def callback(_notification, action):
+            def callback(_, action):
                 notification.close()
 
                 command, arg = action.split('_', 1)
