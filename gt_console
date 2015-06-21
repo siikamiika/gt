@@ -281,11 +281,13 @@ environment variables:
             try:
                 text = input('> ')
             except EOFError:
-                print('')
                 break
             translation = get_translation(args.source_lang, args.target_lang,
                                           text)
             print_translation(translation)
+        # Print a newline so that shell prompt will appear on the next line and
+        # will not be messed up with our prompt.
+        print()
 
 if __name__ == '__main__':
     main()
