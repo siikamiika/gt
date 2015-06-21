@@ -182,7 +182,7 @@ environment variables:
                     highlighted))
             else:
                 print('{} {}'.format(
-                    colorize('no', 'Text was corrected to:'),
+                    colorize('no', 'Text was changed to:'),
                     translation.correction.corrected_text))
 
             translation = get_translation(args.source_lang, args.target_lang,
