@@ -273,7 +273,7 @@ environment variables:
     else:
         try:
             # input() uses readline if and only if this module is loaded.
-            import readline
+            import readline # pylint: disable=unused-variable
         except ImportError:
             pass
         while True:
