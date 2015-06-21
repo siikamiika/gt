@@ -141,12 +141,12 @@ environment variables:
 
     def colorize_between(color, begin, end, text, alt_begin='*', alt_end='*'):
         """
-        Wraps segments of `text' between `begin' and `end' with ANSI escapes
+        Wraps segments of 'text' between 'begin' and 'end' with ANSI escapes
         corresponding to given "part of output" if ansi_capable flag is True
-        and this part of output is known, or wraps them with `alt_begin' and
-        `alt_end' otherwise.
-        If unmatched `begin' on the end of `text' is detected, the reset ANSI
-        escape or `alt_end' is inserted to the end.
+        and this part of output is known, or wraps them with 'alt_begin' and
+        'alt_end' otherwise.
+        If unmatched 'begin' on the end of 'text' is detected, the reset ANSI
+        escape or 'alt_end' is inserted to the end.
         """
         if ansi_capable and color in colors:
             color_begin, color_end = '\033[{}m'.format(colors[color]), '\033[0m'
