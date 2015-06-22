@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+# Redirect stdout to stderr
+exec 1>&2
+
+################################################################################
+
+empty_hash=4b825dc642cb6eb9a060e54bf8d69288fbee4904
+pylintrc=utils/pylintrc
+
+is_python_file() {
+    [[ $1 == *.py ]] && return 0
+    local line
+    IFS= read -r line < "$1" || return 1
+    [[ $line == '#!'*python* ]]
+}
+
+if git rev-parse --verify HEAD >/dev/null; then
+    against=HEAD
+else
+    against=$empty_hash
+fi
+
+pylint_files=()
+pylint_args=( -j3 --output-format=colorized )
+
+get_pylint_files() {
+    pylint_files=()
+    while IFS=$' \t' read -r _ _ _ _ state file; do
+        if [[ $state == [AM] ]] && is_python_file "$file"; then
+            pylint_files+=( "$file" )
+        elif [[ $file == $pylintrc ]]; then
+            if [[ $1 != $empty_hash ]]; then
+                echo "I: '$pylintrc' modified, running pylint on *all* files."
+                get_pylint_files "$empty_hash"
+                return
+            fi
+        fi
+    done < <(git diff-index --cached "$1")
+}
+
+get_pylint_files "$against"
+
+if [[ -e $pylintrc ]]; then
+    pylint_args+=( "--rcfile=$pylintrc" )
+fi
+
+if (( ${#pylint_files[@]} )); then
+    if ! pylint --reports=no "${pylint_args[@]}" -- "${pylint_files[@]}"; then
+        echo "E: pylint failed."
+        exit 1
+    else
+        echo "I: pylint succeed."
+    fi
+else
+    echo "I: not running pylint."
+fi
+
+################################################################################
+
+if ! python3 -m unittest tests/test_doctests.py; then
+    echo "E: test_doctests.py failed."
+    exit 1
+fi
