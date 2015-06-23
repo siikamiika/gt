@@ -6,7 +6,65 @@ exec 1>&2
 ################################################################################
 
 empty_hash=4b825dc642cb6eb9a060e54bf8d69288fbee4904
-pylintrc=utils/pylintrc
+
+if git rev-parse --verify HEAD >/dev/null; then
+    against=HEAD
+else
+    against=$empty_hash
+fi
+
+modified_files=()
+
+get_modified_files() {
+    while IFS=$' \t' read -r _ _ _ _ state file; do
+        if [[ $state == [AM] ]]; then
+            printf '%s\n' "$file"
+        fi
+    done < <(git diff-index --cached "$1")
+}
+
+modified_files=( $(get_modified_files "$against") )
+
+################################################################################
+
+# TAKES:
+#     $1 - function that check if a file should be checked with this checker
+#     $2 - checker's rcfile, or an empty string
+# [rest] - checker and its arguments
+run_checker() {
+    local function=$1; shift
+    local rcfile=$1; shift
+    local -a checker=( "$@" )
+
+    local file
+    local -a files
+    for file in "${modified_files[@]}"; do
+        if "$function" "$file"; then
+            files+=( "$file" )
+        elif [[ -n $rcfile && $file == "$rcfile" ]]; then
+            echo "I: '$rcfile' modified, running '${checker[*]}' on *all* files."
+            files=()
+            for file in $(get_modified_files "$empty_hash"); do
+                if "$function" "$file"; then
+                    files+=( "$file" )
+                fi
+            done
+            break
+        fi
+    done
+    if (( ${#files[@]} )); then
+        if ! "${checker[@]}" "${files[@]}"; then
+            echo "E: '${checker[*]}' failed"
+            exit 1
+        else
+            echo "I: '${checker[*]} ${files[*]}' succeed"
+        fi
+    else
+        echo "I: not running '${checker[*]}'"
+    fi
+}
+
+################################################################################
 
 is_python_file() {
     [[ $1 == *.py ]] && return 0
@@ -15,46 +73,34 @@ is_python_file() {
     [[ $line == '#!'*python* ]]
 }
 
-if git rev-parse --verify HEAD >/dev/null; then
-    against=HEAD
-else
-    against=$empty_hash
-fi
-
-pylint_files=()
-pylint_args=( -j3 --output-format=colorized )
-
-get_pylint_files() {
-    pylint_files=()
-    while IFS=$' \t' read -r _ _ _ _ state file; do
-        if [[ $state == [AM] ]] && is_python_file "$file"; then
-            pylint_files+=( "$file" )
-        elif [[ $file == $pylintrc ]]; then
-            if [[ $1 != $empty_hash ]]; then
-                echo "I: '$pylintrc' modified, running pylint on *all* files."
-                get_pylint_files "$empty_hash"
-                return
-            fi
-        fi
-    done < <(git diff-index --cached "$1")
+is_shell_file() {
+    [[ $1 =~ \.(sh|bash)$ ]] && return 0
+    local line
+    IFS= read -r line < "$1" || return 1
+    [[ $line == '#!'*sh* ]]
 }
 
-get_pylint_files "$against"
+is_python_or_shell_file() {
+    is_python_file "$1" || is_shell_file "$1"
+}
 
-if [[ -e $pylintrc ]]; then
-    pylint_args+=( "--rcfile=$pylintrc" )
-fi
-
-if (( ${#pylint_files[@]} )); then
-    if ! pylint --reports=no "${pylint_args[@]}" -- "${pylint_files[@]}"; then
-        echo "E: pylint failed."
-        exit 1
-    else
-        echo "I: pylint succeed."
+check_non_ascii() {
+    if LC_COLLATE=C grep --with-filename --color=auto '[^ -~]' -- "$@"; then
+        return 1
     fi
-else
-    echo "I: not running pylint."
-fi
+}
+
+run_checker is_python_file \
+            utils/pylintrc \
+            pylint -j3 --output-format=colorized --
+
+run_checker is_shell_file \
+            "" \
+            shellcheck --
+
+run_checker is_python_or_shell_file \
+            "" \
+            check_non_ascii
 
 ################################################################################
 
