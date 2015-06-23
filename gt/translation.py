@@ -180,7 +180,3 @@ class Translation:
                          in _list(_list_get(json_obj, 13, 0))]
 
         self.see_also = _list(_list_get(json_obj, 14, 0))
-
-if __name__ == '__main__':
-    import doctest
-    doctest.testmod()
