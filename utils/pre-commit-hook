@@ -92,7 +92,7 @@ check_non_ascii() {
 
 run_checker is_python_file \
             utils/pylintrc \
-            pylint -j3 --output-format=colorized --
+            pylint -j3 --output-format=colorized --rcfile=utils/pylintrc --reports=no --
 
 run_checker is_shell_file \
             "" \
