@@ -60,7 +60,9 @@ select_binary() {
 
 usage() {
     cat >&2 <<EOF
-USAGE: ${0##*/} [-gd] [-p PLAYER] [-e ENCODING] [--] LANG TEXT
+USAGE: ${0##*/} [-gd] [-p PLAYER] [-e ENCODING] [--] LANG TEXT [TEXT...]
+
+If multiple TEXT arguments are given, they are joined by space.
 
 OPTIONS:
     -g: print voice URL, do not play
@@ -124,6 +126,7 @@ play() {
         return 1
     fi
 
+    local IFS=$' \t\n'
     $player "$(get_voice_url "$@")"
 }
 
@@ -143,8 +146,12 @@ done
 
 # Drop processed arguments
 shift "$(( OPTIND - 1 ))" || usage
-
-# Exactly 2 positional arguments (LANG and TEXT) are required
-(( $# == 2 )) || usage
-
-"$action" "$1" "$2" "$encoding"
+# Now, the first argument is LANG and the rest is TEXT.
+# At least one TEXT argument is required.
+(( $# < 2 )) && usage
+lang=$1
+shift
+# Now all arguments are TEXT.
+# "$*" joins arguments by the first symbol of $IFS.
+IFS=' '
+"$action" "$lang" "$*" "$encoding"
