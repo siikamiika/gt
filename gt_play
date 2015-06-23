@@ -30,7 +30,7 @@ get_voice_url() {
         echo >&2 "W: text is too big (${#text}/100), cutting down."
         text=${text:0:100}
     fi
-    local text=$(urlencode "$text")
+    text=$(urlencode "$text")
     # Hopefully no need in URL-encoding these two...
     local enc=$3
     local lang=$1
@@ -110,7 +110,10 @@ download() {
 #    >0 - if $player is empty and can't be auto-detected or if it failed
 play() {
     # Try to grab $PLAYER environment variable
-    [[ -z $player ]] && player=$PLAYER
+    if [[ -z $player ]]; then
+        # shellcheck disable=SC2153
+        player=$PLAYER
+    fi
 
     # Try to select player from $PATH
     if [[ -z $player ]]; then
