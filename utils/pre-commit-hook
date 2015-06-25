@@ -63,7 +63,7 @@ run_checker() {
             echo "E: '${checker[*]}' failed"
             exit 1
         else
-            echo "I: '${checker[*]} ${files[*]}' succeed"
+            echo "I: '${checker[*]}' succeed"
         fi
     else
         echo "I: not running '${checker[*]}'"
