@@ -14,20 +14,19 @@ else
 fi
 
 # TAKES:
-#     $1 - array name
-#     $2 - tree hash
+#     $1 - tree hash
 get_modified_files() {
-    declare -n _ans=$1
-    _ans=()
     while IFS= read -rd '' _ _ _ _ state file; do
         if [[ $state == [AM] ]]; then
-            _ans+=( "$file" )
+            printf '%s\0' "$file"
         fi
-    done < <(git diff-index --cached -z "$2")
+    done < <(git diff-index --cached -z "$1")
 }
 
 modified_files=()
-get_modified_files modified_files "$against"
+while IFS= read -rd '' file; do
+    modified_files+=( "$file" )
+done < <(get_modified_files "$against")
 
 ################################################################################
 
@@ -47,14 +46,12 @@ run_checker() {
             files+=( "$file" )
         elif [[ -n $rcfile && $file == "$rcfile" ]]; then
             echo "I: '$rcfile' modified, running '${checker[*]}' on *all* files."
-            local -a all_files
-            get_modified_files all_files "$empty_hash"
             files=()
-            for file in "${all_files[@]}"; do
+            while IFS= read -rd '' file; do
                 if "$function" "$file"; then
                     files+=( "$file" )
                 fi
-            done
+            done < <(get_modified_files "$empty_hash")
             break
         fi
     done
