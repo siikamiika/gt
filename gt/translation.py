@@ -26,12 +26,26 @@ def _list_get(obj, *indices):
 def _list(obj):
     """
     Returns the original object if it is a list, or an empty list.
+
+    >>> _list([])
+    []
+    >>> _list([1, 2, 3])
+    [1, 2, 3]
+    >>> _list(None)
+    []
     """
     return obj if isinstance(obj, list) else []
 
 def _str(obj):
     """
     Returns the original object if it is a string, or an empty string.
+
+    >>> _str('')
+    ''
+    >>> _str('abc')
+    'abc'
+    >>> _str(None)
+    ''
     """
     return obj if isinstance(obj, str) else ''
 
