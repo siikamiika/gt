@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+IFS= read -rd '' realpath < <(readlink -e -z -- "$0")
+IFS= read -rd '' dirname < <(dirname -z -- "$realpath")
+
+cd -- "$dirname"/.. || exit "$?"
+
+shopt -s nullglob
+for testfile in tests/test_*.py; do
+    python3 -m unittest "$testfile" || exit "$?"
+done
