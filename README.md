@@ -46,7 +46,7 @@ Bells and whistles:
 
 `--segments`:
 
-![alt](https://cloud.githubusercontent.com/assets/5462697/8230815/5d3b6d36-15cc-11e5-8a43-f63f85e77a27.png)
+![alt](https://cloud.githubusercontent.com/assets/5462697/8569162/3929eeca-257d-11e5-86da-f5a1cb58e969.png)
 
 Transliteration (`-tTr` is for `--translit --source-translit --result-only`):
 
