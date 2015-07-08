@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-IFS= read -rd '' realpath < <(readlink -e -z -- "$0")
-IFS= read -rd '' dirname < <(dirname -z -- "$realpath")
-
+IFS= read -rd '' dirname < <(dirname -z -- "$0")
 cd -- "$dirname"/.. || exit "$?"
 
 shopt -s nullglob
