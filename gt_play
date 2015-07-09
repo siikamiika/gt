@@ -152,9 +152,7 @@ shift "$(( OPTIND - 1 ))" || usage
 # Now, the first argument is LANG and the rest is TEXT.
 # At least one TEXT argument is required.
 (( $# < 2 )) && usage
-lang=$1
-shift
-# Now all arguments are TEXT.
-# "$*" joins arguments by the first symbol of $IFS.
+# "$*" joins arguments by the first symbol of $IFS, "${*:2}" joins all arguments
+# starting with the second.
 IFS=' '
-"$action" "$lang" "$*" "$encoding"
+"$action" "$1" "${*:2}" "$encoding"
