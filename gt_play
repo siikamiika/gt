@@ -109,39 +109,43 @@ download() {
 #     0 - if everything is OK
 #    >0 - if $player is empty and can't be auto-detected or if it failed
 play() {
-    # Try to grab $PLAYER environment variable
-    if [[ -z $player ]]; then
+    # if "-p" wasn't passed...
+    if [[ ! -v player ]]; then
+        # If $PLAYER is set and not empty, grab it
         # shellcheck disable=SC2153
-        player=$PLAYER
+        if [[ -n $PLAYER ]]; then
+            player=( $PLAYER )
+        else
+            # Try to guess player
+            local binary
+            if binary=$(select_binary mpv mplayer2 mplayer); then
+                # If mpv was chosen by select_binary, and it supports
+                # '--no-ytdl' option, pass it.
+                if [[ $binary == mpv ]] && \
+                    mpv --no-ytdl >/dev/null 2>/dev/null;
+                then
+                    player=( mpv --no-ytdl )
+                else
+                    player=( "$binary" )
+                fi
+            else
+                echo >&2 "E: cannot auto-detect player."
+                return 1
+            fi
+        fi
     fi
-
-    # Try to select player from $PATH
-    if [[ -z $player ]]; then
-        player=$(select_binary mpv mplayer2 mplayer)
-        # Disable mpv's ytdl hook: if mpv was chosen by select_binary, and it
-        # does support the '--no-ytdl' option, pass it.
-        [[ $player == mpv ]] && mpv --no-ytdl >/dev/null 2>/dev/null \
-            && player='mpv --no-ytdl'
-    fi
-
-    if [[ -z $player ]]; then
-        echo >&2 "E: cannot auto-detect player."
-        return 1
-    fi
-
-    local IFS=$' \t\n'
-    $player "$(get_voice_url "$@")"
+    "${player[@]}" "$(get_voice_url "$@")"
 }
 
 action=play
-player=
+unset player
 encoding=UTF-8
 
 while getopts 'gdp:e:' option; do
     case "$option" in
         g) action=get_voice_url ;;
         d) action=download ;;
-        p) player=$OPTARG ;;
+        p) player=( $OPTARG ) ;;
         e) encoding=$OPTARG ;;
         *) usage ;;
     esac
@@ -149,10 +153,19 @@ done
 
 # Drop processed arguments
 shift "$(( OPTIND - 1 ))" || usage
+
 # Now, the first argument is LANG and the rest is TEXT.
 # At least one TEXT argument is required.
 (( $# < 2 )) && usage
-# "$*" joins arguments by the first symbol of $IFS, "${*:2}" joins all arguments
-# starting with the second.
+
+# "$*" joins arguments by the first symbol of $IFS. We save old $IFS to restore
+# it later.
+old_ifs=$IFS
+# Join TEXT arguments by space. "${*:2}" joins arguments starting with the
+# second.
 IFS=' '
-"$action" "$1" "${*:2}" "$encoding"
+joined_text=${*:2}
+# Restore $IFS
+IFS=$old_ifs
+
+"$action" "$1" "$joined_text" "$encoding"
