@@ -160,14 +160,10 @@ class Translation:
         self.original_translit = ''
 
         for sentence in _list(_list_get(json_obj, 0)):
-            if not isinstance(sentence, list):
-                continue
-            if len(sentence) == 2:
-                self.translation += _str(sentence[0])
-                self.original += _str(sentence[1])
-            elif len(sentence) == 4:
-                self.translation_translit += _str(sentence[2])
-                self.original_translit += _str(sentence[3])
+            self.translation += _str(_list_get(sentence, 0))
+            self.original += _str(_list_get(sentence, 1))
+            self.translation_translit += _str(_list_get(sentence, 2))
+            self.original_translit += _str(_list_get(sentence, 3))
 
         self.speech_part_variants = [SpeechPartSpecificVariants(obj) for obj
                                      in _list(_list_get(json_obj, 1))]

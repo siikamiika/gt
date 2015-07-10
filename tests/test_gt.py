@@ -5,6 +5,18 @@ try:
 except ImportError: # hack for pylint
     from .. import gt # pylint: disable=import-self
 
+class FiveElementsPerSentence(unittest.TestCase):
+    translation = None
+
+    def setUp(self):
+        self.translation = gt.get_translation(
+            'ru', 'en', 'одновременный')
+
+    def test_translation(self):
+        self.assertEqual(
+            self.translation.translation.lower(),
+            'simultaneous')
+
 class GTLibrary(unittest.TestCase):
     translation = None
 
