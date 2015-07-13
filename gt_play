@@ -1,22 +1,5 @@
 #!/usr/bin/env bash
 
-# TAKES:
-#     $@ - binary names
-# PRINTS:
-#     first binary name found in PATH
-# RETURNS:
-#     0 - if a binary was found and printed
-#     1 - otherwise
-select_binary() {
-    local binary
-    for binary; do
-        hash -- "$binary" 2>/dev/null || continue
-        printf '%s\n' "$binary"
-        return
-    done
-    return 1
-}
-
 # SETS:
 #     player - player binary and arguments
 # RETURNS:
@@ -27,13 +10,19 @@ guess_player() {
     if [[ -n $PLAYER ]]; then
         player=( $PLAYER )
     else
-        local binary
-        if binary=$(select_binary mpv mplayer2 mplayer); then
-            if [[ $binary == mpv ]] && mpv --no-ytdl >/dev/null 2>/dev/null
+        local binary chosen_binary
+        for binary in mpv mplayer2 mplayer; do
+            if hash -- "$binary" 2>/dev/null; then
+                chosen_binary=$binary
+                break
+            fi
+        done
+        if [[ -n $chosen_binary ]]; then
+            if [[ $chosen_binary == mpv ]] && mpv --no-ytdl >/dev/null 2>&1
             then
                 player=( mpv --no-ytdl )
             else
-                player=( "$binary" )
+                player=( "$chosen_binary" )
             fi
         else
             return 1
