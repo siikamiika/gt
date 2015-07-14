@@ -154,7 +154,7 @@ If multiple TEXT arguments are given, they are joined by space.
 
 OPTIONS:
     -g: print voice URL, do not play
-    -g: download, do not play
+    -d: download, do not play
     -p: specify a player (default: guess from \$PLAYER, mpv, mplayer2, mplayer)
     -e: specify TEXT encoding (default: UTF-8)
 
