@@ -30,25 +30,19 @@ guess_player() {
     fi
 }
 
+# TAKES:
+#     $1 - User-Agent string
 # SETS:
-#     downloader - function that takes:
-#         $1  - URL
-#         $2  - output file
-#        [$3] - User-Agent string
+#     downloader - downloader binary and its arguments (pass output file as a
+#         first argument and URL as a second)
 # RETURNS:
 #     0 - if downloader was detected
 #     1 - otherwise
 guess_downloader() {
     if hash wget 2>/dev/null; then
-        downloader() {
-            # shellcheck disable=SC2086
-            wget -O "$2" ${3+-U "$3"} "$1"
-        }
+        downloader=( wget -U "$1" -O )
     elif hash curl 2>/dev/null; then
-        downloader() {
-            # shellcheck disable=SC2086
-            curl -L -o "$2" ${3+-A "$3"} "$1"
-        }
+        downloader=( curl -L -A "$1" -o )
     else
         return 1
     fi
@@ -123,14 +117,13 @@ get_voice_url() {
 #     0 - if everything is OK
 #    >0 - if no downloaders were found or if a downloader failed
 download() {
-    if ! guess_downloader; then
+    if ! guess_downloader 'Mozilla/5.0'; then
         echo >&2 "E: can't guess downloader."
         return 1
     fi
-    downloader \
-        "$(get_voice_url "$@")" \
+    command -- "${downloader[@]}" \
         "$(make_filename "$2" mp3)" \
-        'Mozilla/5.0'
+        "$(get_voice_url "$@")"
 }
 
 # TAKES:
