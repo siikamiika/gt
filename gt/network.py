@@ -43,26 +43,33 @@ def fetch_response(source_lang, target_lang, text,
            '&q=' + quote_plus(text)
 
     if include_translation:
+        # 't' is for 'translation'
         url += '&dt=t'
     if include_translit:
         url += '&dt=rm'
     if include_variants:
         url += '&dt=bd'
     if include_segments:
+        # 'at' is for 'alternative translations'
         url += '&dt=at'
     if include_examples:
+        # 'ex' is for 'examples'
         url += '&dt=ex'
     if include_definitions:
         url += '&dt=md'
     if include_see_also:
         url += '&dt=rw'
     if include_synonyms:
+        # 'ss' is for 'source synonyms'
         url += '&dt=ss'
     if suggest_language:
+        # 'ld' is for 'language detect'
         url += '&dt=ld'
     if correct_typos:
+        # 'qc' is for 'quick correct'
         url += '&dt=qc'
     if interface_lang is not None:
+        # 'hl' is for 'home language'
         url += '&hl=' + quote_plus(interface_lang)
 
     request = Request(url)
