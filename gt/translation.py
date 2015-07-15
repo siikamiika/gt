@@ -62,11 +62,14 @@ class SpeechPartSpecificVariants:
 
     speech_part = None
     variants = None
+    max_weight = None
 
     def __init__(self, json_obj):
         self.speech_part = _list_get(json_obj, 0)
         self.variants = [self.SpeechPartSpecificVariant(obj) for obj
                          in _list(_list_get(json_obj, 2))]
+        self.max_weight = max((v.weight for v in self.variants if v.weight),
+                              default=0)
 
 class SegmentTranslation:
     original_segment = None
