@@ -18,7 +18,7 @@ class FiveElementsPerSentence(unittest.TestCase):
             self.translation.translation.lower(),
             'simultaneous')
 
-class GTLibrary(unittest.TestCase):
+class SingleWordTranslation(unittest.TestCase):
     translation = None
 
     @classmethod
