@@ -16,7 +16,7 @@ class MaxWeight(unittest.TestCase):
 
     def test_max_weight(self):
         self.assertNotEqual(
-            self.translation.speech_part_variants[0].max_weight, 0)
+            self.translation.variant_groups[0].max_weight, 0)
 
 class FiveElementsPerSentence(unittest.TestCase):
     translation = None
@@ -69,11 +69,11 @@ class SingleWordTranslation(unittest.TestCase):
             self.translation.source_lang,
             'en')
 
-    def test_speech_part_variants(self):
+    def test_variant_groups(self):
         self.assertNotEqual(
-            self.translation.speech_part_variants,
+            self.translation.variant_groups,
             [])
-        for group in self.translation.speech_part_variants:
+        for group in self.translation.variant_groups:
             self.assertIsNotNone(group.speech_part)
             self.assertNotEqual(group.variants, [])
             for variant in group.variants:
@@ -81,7 +81,7 @@ class SingleWordTranslation(unittest.TestCase):
                 self.assertNotEqual(variant.synonyms, [])
 
     def test_interface_language(self):
-        speech_part_names = [v.speech_part
-                             for v in self.translation.speech_part_variants]
+        speech_part_names = [g.speech_part
+                             for g in self.translation.variant_groups]
         self.assertIn('имя существительное', speech_part_names)
         self.assertIn('глагол', speech_part_names)

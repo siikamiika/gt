@@ -49,8 +49,8 @@ def _str(obj):
     """
     return obj if isinstance(obj, str) else ''
 
-class SpeechPartSpecificVariants:
-    class SpeechPartSpecificVariant:
+class TranslationVariantsGroup:
+    class TranslationVariant:
         translation = None
         synonyms = None
         weight = None
@@ -66,7 +66,7 @@ class SpeechPartSpecificVariants:
 
     def __init__(self, json_obj):
         self.speech_part = _list_get(json_obj, 0)
-        self.variants = [self.SpeechPartSpecificVariant(obj) for obj
+        self.variants = [self.TranslationVariant(obj) for obj
                          in _list(_list_get(json_obj, 2))]
         self.max_weight = max((v.weight for v in self.variants if v.weight),
                               default=0)
@@ -88,7 +88,7 @@ class LanguageSuggestion:
         self.language = language
         self.weight = weight
 
-class SpeechPartSpecificSynonyms:
+class SynonymsGroup:
     speech_part = None
     synonyms = None
     dict_entry = None
@@ -98,8 +98,8 @@ class SpeechPartSpecificSynonyms:
         self.synonyms = _list_get(json_obj, 1, 0, 0)
         self.dict_entry = _list_get(json_obj, 1, 0, 1)
 
-class SpeechPartSpecificDefinitions:
-    class SpeechPartSpecificDefinition:
+class DefinitionsGroup:
+    class Definition:
         definition = None
         dict_entry = None
         example = None
@@ -114,7 +114,7 @@ class SpeechPartSpecificDefinitions:
 
     def __init__(self, json_obj):
         self.speech_part = _list_get(json_obj, 0)
-        self.definitions = [self.SpeechPartSpecificDefinition(obj) for obj
+        self.definitions = [self.Definition(obj) for obj
                             in _list(_list_get(json_obj, 1))]
 
 class UsageExample:
@@ -147,12 +147,12 @@ class Translation:
     translation_translit = None
     original_translit = None
     source_lang = None
-    speech_part_variants = None
+    variant_groups = None
     segments = None
     correction = None
     lang_suggests = None
-    speech_part_synonyms = None
-    speech_part_definitions = None
+    synonym_groups = None
+    definition_groups = None
     examples = None
     see_also = None
 
@@ -168,8 +168,8 @@ class Translation:
             self.translation_translit += _str(_list_get(sentence, 2))
             self.original_translit += _str(_list_get(sentence, 3))
 
-        self.speech_part_variants = [SpeechPartSpecificVariants(obj) for obj
-                                     in _list(_list_get(json_obj, 1))]
+        self.variant_groups = [TranslationVariantsGroup(obj) for obj
+                               in _list(_list_get(json_obj, 1))]
 
         self.source_lang = _list_get(json_obj, 2)
 
@@ -182,12 +182,11 @@ class Translation:
                               in zip(_list(_list_get(json_obj, 8, 0)),
                                      _list(_list_get(json_obj, 8, 2)))]
 
-        self.speech_part_synonyms = [SpeechPartSpecificSynonyms(obj) for obj
-                                     in _list(_list_get(json_obj, 11))]
+        self.synonym_groups = [SynonymsGroup(obj) for obj
+                               in _list(_list_get(json_obj, 11))]
 
-        self.speech_part_definitions = [SpeechPartSpecificDefinitions(obj)
-                                        for obj in _list(
-                                            _list_get(json_obj, 12))]
+        self.definition_groups = [DefinitionsGroup(obj) for obj
+                                  in _list(_list_get(json_obj, 12))]
 
         self.examples = [UsageExample(obj) for obj
                          in _list(_list_get(json_obj, 13, 0))]

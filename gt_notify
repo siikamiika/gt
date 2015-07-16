@@ -113,7 +113,7 @@ map the "see also" list to notification actions.
             message += '<i>{}</i>\n'.format(html_escape(
                 translation.original_translit))
 
-        if translation.speech_part_variants:
+        if translation.variant_groups:
             message += '<b>{}</b>'.format(html_escape(translation.translation))
         else:
             message += html_escape(translation.translation)
@@ -122,10 +122,10 @@ map the "see also" list to notification actions.
             message += '\n<i>{}</i>'.format(html_escape(
                 translation.translation_translit))
 
-        for speech_part_variant in translation.speech_part_variants:
-            variants = [v.translation for v in speech_part_variant.variants]
+        for group in translation.variant_groups:
+            variants = (v.translation for v in group.variants)
             message += '\n\n<u>{}</u>: {}'.format(
-                html_escape(speech_part_variant.speech_part),
+                html_escape(group.speech_part),
                 html_escape(', '.join(variants)))
 
         if args.see_also:

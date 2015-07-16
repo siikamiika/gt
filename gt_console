@@ -250,28 +250,27 @@ environment variables:
         if args.translit and translation.translation_translit:
             print(colorize('tr', translation.translation_translit))
 
-        if translation.speech_part_variants:
-            for spv in translation.speech_part_variants:
-                if args.extended:
-                    print(' {}:'.format(colorize('sp', spv.speech_part)))
-                    for variant in spv.variants:
-                        if args.ratings:
-                            if variant.weight is not None and spv.max_weight:
-                                level = variant.weight / spv.max_weight
-                            else:
-                                level = 0
-                            tab = build_bar(level, 3)
+        for group in translation.variant_groups:
+            if args.extended:
+                print(' {}:'.format(colorize('sp', group.speech_part)))
+                for variant in group.variants:
+                    if args.ratings:
+                        if variant.weight is not None and group.max_weight:
+                            level = variant.weight / group.max_weight
                         else:
-                            tab = '  '
-                        print('{}{}: {}'.format(
-                            tab,
-                            colorize('tv', variant.translation),
-                            colorize('os', ', '.join(variant.synonyms))))
-                else:
-                    variants = (v.translation for v in spv.variants)
-                    print(' {}: {}'.format(
-                        colorize('sp', spv.speech_part),
-                        colorize('tv', ', '.join(variants))))
+                            level = 0
+                        tab = build_bar(level, 3)
+                    else:
+                        tab = '  '
+                    print('{}{}: {}'.format(
+                        tab,
+                        colorize('tv', variant.translation),
+                        colorize('os', ', '.join(variant.synonyms))))
+            else:
+                variants = (v.translation for v in group.variants)
+                print(' {}: {}'.format(
+                    colorize('sp', group.speech_part),
+                    colorize('tv', ', '.join(variants))))
 
         if translation.examples:
             print('\n{}:'.format(colorize('he', 'Examples')))
@@ -279,11 +278,11 @@ environment variables:
                 print(' {}'.format(html_unescape(colorize_between(
                     'bo', '<b>', '</b>', example.example_html))))
 
-        if translation.speech_part_definitions:
+        if translation.definition_groups:
             print('\n{}:'.format(colorize('he', 'Definitions')))
-            for spd in translation.speech_part_definitions:
-                print(' {}:'.format(colorize('sp', spd.speech_part)))
-                for definition in spd.definitions:
+            for group in translation.definition_groups:
+                print(' {}:'.format(colorize('sp', group.speech_part)))
+                for definition in group.definitions:
                     if definition.example:
                         print('  {} -- {}'.format(
                             definition.definition,
@@ -291,12 +290,12 @@ environment variables:
                     else:
                         print('  {}'.format(definition.definition))
 
-        if translation.speech_part_synonyms:
+        if translation.synonym_groups:
             print('\n{}:'.format(colorize('he', 'Synonyms')))
-            for synonyms in translation.speech_part_synonyms:
+            for group in translation.synonym_groups:
                 print(' {}: {}'.format(
-                    colorize('sp', synonyms.speech_part),
-                    ', '.join(synonyms.synonyms)))
+                    colorize('sp', group.speech_part),
+                    ', '.join(group.synonyms)))
 
         if translation.see_also:
             print('\n{}:'.format(colorize('he', 'See also')))
