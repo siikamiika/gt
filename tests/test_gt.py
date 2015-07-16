@@ -8,8 +8,9 @@ except ImportError: # hack for pylint
 class FiveElementsPerSentence(unittest.TestCase):
     translation = None
 
-    def setUp(self):
-        self.translation = gt.get_translation(
+    @classmethod
+    def setUpClass(cls):
+        cls.translation = gt.get_translation(
             'ru', 'en', 'одновременный')
 
     def test_translation(self):
@@ -20,8 +21,9 @@ class FiveElementsPerSentence(unittest.TestCase):
 class GTLibrary(unittest.TestCase):
     translation = None
 
-    def setUp(self):
-        self.translation = gt.get_translation(
+    @classmethod
+    def setUpClass(cls):
+        cls.translation = gt.get_translation(
             'en', 'ru', 'hello',
             include_translit=True, include_variants=True,
             include_segments=True, include_examples=True,
