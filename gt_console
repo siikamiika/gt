@@ -110,6 +110,11 @@ environment variables:
                         action='store_true',
                         help='suggest the original language(s)')
 
+    parser.add_argument('-R', '--ratings',
+                        action='store_true',
+                        help='show translation ratings (only makes sense with '
+                             '-x/--extended)')
+
     parser.add_argument('-L', '--interface-lang',
                         help='specify the interface language (that is, language'
                              ' of speech part names)')
@@ -171,6 +176,29 @@ environment variables:
             correct_typos=args.correct,
             interface_lang=args.interface_lang)
 
+    def build_bar(level, width, blocks=' ▏▎▍▌▋▊▉█'):
+        """
+        Builds a text bar.
+        Args:
+            level: the ratio of the 'filled' part to the whole; must belong to
+                [0; 1]
+            width: bar width in symbols
+            blocks: symbols to use, from 'empty' to 'filled up'
+        """
+        if level < 0 or level > 1:
+            raise ValueError('level must belong to [0; 1]')
+        if width <= 0:
+            raise ValueError('width must be positive')
+        if not blocks:
+            raise ValueError('blocks are empty')
+        fullblocks = int(width * level)
+        start = blocks[-1] * fullblocks
+        if fullblocks == width:
+            return start
+        end = blocks[0] * (width - fullblocks - 1)
+        middle_index = round((width * level - fullblocks) * (len(blocks)-1))
+        return start + blocks[middle_index] + end
+
     def print_translation(translation):
         if translation.correction.corrected_text:
             if translation.correction.corrected_html:
@@ -227,7 +255,16 @@ environment variables:
                 if args.extended:
                     print(' {}:'.format(colorize('sp', spv.speech_part)))
                     for variant in spv.variants:
-                        print('  {}: {}'.format(
+                        if args.ratings:
+                            if variant.weight is not None and spv.max_weight:
+                                level = variant.weight / spv.max_weight
+                            else:
+                                level = 0
+                            tab = build_bar(level, 3)
+                        else:
+                            tab = '  '
+                        print('{}{}: {}'.format(
+                            tab,
                             colorize('tv', variant.translation),
                             colorize('os', ', '.join(variant.synonyms))))
                 else:
