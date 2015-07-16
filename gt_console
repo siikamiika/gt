@@ -162,20 +162,6 @@ environment variables:
             result += color_end
         return result
 
-    def get_translation(source_lang, target_lang, text):
-        return gt.get_translation(
-            source_lang, target_lang, text,
-            include_translit=args.translit or args.source_translit,
-            include_variants=not args.result_only,
-            include_segments=args.segments,
-            include_examples=args.examples,
-            include_definitions=args.definitions,
-            include_see_also=args.see_also,
-            include_synonyms=args.synonyms,
-            suggest_language=args.suggest_lang,
-            correct_typos=args.correct,
-            interface_lang=args.interface_lang)
-
     def build_bar(level, width, blocks=' ▏▎▍▌▋▊▉█'):
         """
         Builds a text bar.
@@ -198,6 +184,20 @@ environment variables:
         end = blocks[0] * (width - fullblocks - 1)
         middle_index = round((width * level - fullblocks) * (len(blocks)-1))
         return start + blocks[middle_index] + end
+
+    def get_translation(source_lang, target_lang, text):
+        return gt.get_translation(
+            source_lang, target_lang, text,
+            include_translit=args.translit or args.source_translit,
+            include_variants=not args.result_only,
+            include_segments=args.segments,
+            include_examples=args.examples,
+            include_definitions=args.definitions,
+            include_see_also=args.see_also,
+            include_synonyms=args.synonyms,
+            suggest_language=args.suggest_lang,
+            correct_typos=args.correct,
+            interface_lang=args.interface_lang)
 
     def print_translation(translation):
         if translation.correction.corrected_text:
