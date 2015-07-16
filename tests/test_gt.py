@@ -55,3 +55,20 @@ class SingleWordTranslation(unittest.TestCase):
         self.assertEqual(
             self.translation.source_lang,
             'en')
+
+    def test_speech_part_variants(self):
+        self.assertNotEqual(
+            self.translation.speech_part_variants,
+            [])
+        for group in self.translation.speech_part_variants:
+            self.assertIsNotNone(group.speech_part)
+            self.assertNotEqual(group.variants, [])
+            for variant in group.variants:
+                self.assertIsNotNone(variant.translation)
+                self.assertNotEqual(variant.synonyms, [])
+
+    def test_interface_language(self):
+        speech_part_names = [v.speech_part
+                             for v in self.translation.speech_part_variants]
+        self.assertIn('имя существительное', speech_part_names)
+        self.assertIn('глагол', speech_part_names)
