@@ -235,7 +235,7 @@ environment variables:
         if args.source_translit and translation.original_translit:
             print(colorize('tr', translation.original_translit))
 
-        if args.segments and translation.segments:
+        if translation.segments:
             for segment in translation.segments:
                 if (not segment.translations or
                         segment.translations[0] == segment.original_segment):
