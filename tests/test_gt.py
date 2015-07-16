@@ -5,6 +5,19 @@ try:
 except ImportError: # hack for pylint
     from .. import gt # pylint: disable=import-self
 
+class MaxWeight(unittest.TestCase):
+    translation = None
+
+    @classmethod
+    def setUpClass(cls):
+        cls.translation = gt.get_translation(
+            'en', 'ru', 'jar',
+            include_variants=True)
+
+    def test_max_weight(self):
+        self.assertNotEqual(
+            self.translation.speech_part_variants[0].max_weight, 0)
+
 class FiveElementsPerSentence(unittest.TestCase):
     translation = None
 
