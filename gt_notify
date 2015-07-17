@@ -47,7 +47,7 @@ def main():
 
     parser.add_argument('--timeout', type=float, default=0,
                         help='notification timeout or 0 (default) to show '
-                             'forever')
+                             'until closed')
 
     parser.add_argument('-T', '--source-translit', action='store_true',
                         help='include source transliteration')

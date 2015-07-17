@@ -43,24 +43,24 @@ environment variables:
             no  notice
             tr  transliteration
             sp  speech part name
-            tv  speech part-specific translation variant
+            tv  translation variant
             os  synonym in original language
             he  header
             ex  usage example in the context of the definition
             bo  "bold" text used to highlight the word in the example
             co  correction highlight
 
-"text" arguments handling and interactive mode
+"text" arguments handling and the interactive mode:
 
-    If multiple "text" arguments given, they are joined by space; that means you
-    don't need to quote phrases, i.e. you can type
+    If multiple "text" arguments are given, they are joined by space; that means
+    you don't need to quote phrases, i.e. you can type
         $ gt en de get out
     instead of
         $ gt en de 'get out'
     Beware of your shell metacharacters, though.
 
-    If no "text" arguments given, the program will start in an interactive mode.
-    You can quit the interactive shell mode by sending an EOF (typically Ctrl-D).
+    If no "text" arguments given, the program will start in the interactive
+    mode. You can quit it by sending an EOF (typically Ctrl+D).
 ''')
 
     parser.add_argument('-T', '--source-translit',
