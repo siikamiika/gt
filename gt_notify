@@ -93,7 +93,7 @@ map the "see also" list to notification actions.
             include_definitions=False,
             include_see_also=bool(args.see_also),
             include_synonyms=False,
-            suggest_language=True,
+            suggest_language=False,
             correct_typos=False,
             interface_lang=args.interface_lang)
 
