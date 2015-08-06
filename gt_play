@@ -17,7 +17,7 @@ ret() {
 
 ################################################################################
 
-# Check if $1 is a name of an existent binary.
+# Checks if $1 is a name of an existent binary.
 # TAKES:
 #     $1 — binary name
 # [rest] — (ignored)
