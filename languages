@@ -6,7 +6,7 @@
 #
 # Default DOMAIN is 'com' (English language).
 
-useragent='Mozilla/5.0'
+useragent='Mozilla/5.0 (X11; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0'
 url=http://translate.google."${1:-com}"
 
 if hash wget 2>/dev/null; then

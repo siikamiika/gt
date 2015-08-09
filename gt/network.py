@@ -4,7 +4,7 @@ This module contains an URL construction and fetching function.
 from urllib.parse import quote_plus
 from urllib.request import Request, urlopen
 
-USER_AGENT = 'Mozilla/5.0'
+USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0'
 
 def fetch_response(source_lang, target_lang, text,
                    include_translation=True, include_translit=False,
