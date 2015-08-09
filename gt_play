@@ -104,6 +104,8 @@ urlencode_() {
 
 ################################################################################
 
+USERAGENT='Mozilla/5.0 (X11; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0'
+
 # TAKES:
 #     $1 - language code
 #     $2 - text
@@ -116,7 +118,7 @@ get_voice_url_() {
     fi
     ret text urlencode_ "$text"
     # shellcheck disable=SC2034
-    _ans="http://translate.google.com/translate_tts?ie=$enc&tl=$lang&q=$text"
+    _ans="http://translate.google.com/translate_tts?ie=$enc&tl=$lang&q=$text&total=1&idx=0&client=t&prev=input"
 }
 
 # TAKES:
@@ -135,7 +137,7 @@ print_voice_url() {
 #     $3 - encoding
 download() {
     local -a downloader
-    if ! ret downloader select_downloader_; then
+    if ! ret downloader select_downloader_ "$USERAGENT"; then
         echo >&2 "E: can't auto-detect downloader."
         return 1
     fi
@@ -150,6 +152,19 @@ download() {
 #     $2 - text
 #     $3 - encoding
 play() {
+    local tempfile
+    tempfile=$(mktemp --suffix=.mp3) || return "$?"
+
+    _cleanup_tempfile() {
+        rm -- "$tempfile"
+    }
+
+    if ! ret downloader select_downloader_ "$USERAGENT"; then
+        echo >&2 "E: can't auto-detect downloader."
+        _cleanup_tempfile
+        return 1
+    fi
+
     local -a player
     if [[ -v option_player ]]; then
         player=( $option_player )
@@ -161,12 +176,23 @@ play() {
                  kaffeine parole totem vlc
         then
             echo >&2 "E: can't auto-detect player."
+            _cleanup_tempfile
             return 1
         fi
     fi
+
     local url
     ret url get_voice_url_ "$@"
-    command -- "${player[@]}" "$url"
+
+    if ! command -- "${downloader[@]}" "$tempfile" "$url"; then
+        _cleanup_tempfile
+        return 1
+    fi
+    if ! command -- "${player[@]}" "$tempfile"; then
+        _cleanup_tempfile
+        return 1
+    fi
+    _cleanup_tempfile
 }
 
 ################################################################################
