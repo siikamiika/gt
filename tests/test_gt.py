@@ -56,7 +56,7 @@ class SingleWordTranslation(unittest.TestCase):
 
     def test_translation_translit(self):
         self.assertEqual(
-            self.translation.translation_translit,
+            self.translation.translation_translit.lower(),
             'zdravstvuyte')
 
     def test_original_translit(self):
