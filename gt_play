@@ -205,6 +205,7 @@ If multiple TEXT arguments are given, they are joined by space.
 
 OPTIONS:
     -g: print voice URL, do not play
+          NOTE: you must have a browser User-Agent to access it.
     -d: download, do not play
     -p: specify a player
     -e: specify TEXT encoding (default: UTF-8)
