@@ -240,7 +240,7 @@ environment variables:
                         segment.translations[0] == segment.original_segment):
                     print(segment.original_segment)
                 else:
-                    print('{}\n    {}'.format(
+                    print('{}\n  {}'.format(
                         segment.translations[0],
                         colorize('tv', segment.original_segment)))
         else:
