@@ -92,7 +92,7 @@ environment variables:
 
     parser.add_argument('-d', '--definitions',
                         action='store_true',
-                        help='show definition(s) of a given word')
+                        help='show definitions of a given word')
 
     parser.add_argument('-a', '--see-also',
                         action='store_true',
@@ -104,11 +104,12 @@ environment variables:
 
     parser.add_argument('-c', '--correct',
                         action='store_true',
-                        help='auto-correct the original text')
+                        help='auto-correct the original text (or transcribe to '
+                             'a different writing system)')
 
     parser.add_argument('-l', '--suggest-lang',
                         action='store_true',
-                        help='suggest the original language(s)')
+                        help='suggest original language(s)')
 
     parser.add_argument('-R', '--ratings',
                         action='store_true',
@@ -319,7 +320,7 @@ environment variables:
             translation = get_translation(args.source_lang, args.target_lang,
                                           text)
             print_translation(translation)
-        # Print a newline so that shell prompt will appear on the next line and
+        # Print a newline so that shell prompt that will appear on the next line
         # will not be messed up with our prompt.
         print()
 
