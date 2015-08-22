@@ -69,3 +69,5 @@ Custom interface language:
 (with a keybind set up)
 
 ![1](https://cloud.githubusercontent.com/assets/5462697/5102702/8ae4583a-6fdf-11e4-91ed-259bf8f5a051.png)
+
+**PROTIP** (Gecko, WebKit): hold the Alt key to be able to highlight hyperlinks content.
