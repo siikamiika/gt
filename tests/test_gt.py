@@ -1,9 +1,6 @@
 import unittest
 
-try:
-    import gt
-except ImportError: # hack for pylint
-    from .. import gt # pylint: disable=import-self
+import gt
 
 class MaxWeight(unittest.TestCase):
     translation = None
@@ -70,11 +67,9 @@ class SingleWordTranslation(unittest.TestCase):
             'en')
 
     def test_variant_groups(self):
-        # pylint: disable=no-member
         self.assertNotEqual(
             self.translation.variant_groups,
             [])
-        # pylint: disable=no-member
         for group in self.translation.variant_groups:
             self.assertIsNotNone(group.speech_part)
             self.assertNotEqual(group.variants, [])
@@ -83,7 +78,6 @@ class SingleWordTranslation(unittest.TestCase):
                 self.assertNotEqual(variant.synonyms, [])
 
     def test_interface_language(self):
-        # pylint: disable=no-member
         speech_part_names = [g.speech_part
                              for g in self.translation.variant_groups]
         self.assertIn('имя существительное', speech_part_names)
