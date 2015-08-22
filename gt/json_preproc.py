@@ -3,6 +3,19 @@ This module contains the 'preprocess' function that converts JavaScript objects
 into JSON ones.
 """
 
+class ParserState:
+    """
+    A namespace for an enumeration.
+    """
+    # Going to append next symbol as-is
+    NORMAL = 1
+    # Going to append 'null' if the next symbol is comma
+    COMMA = 2
+    # We're inside a string; going to wait for an unescaped comma
+    STRING = 3
+    # We're inside a string, previous character is a backslash
+    STRING_ESCAPE = 4
+
 def preprocess(source):
     """
     Converts JavaScript-compatible nested arrays to a valid JSON.
@@ -31,19 +44,6 @@ def preprocess(source):
     >>> preprocess('[1,2,,]')
     '[1,2,null]'
     """
-
-    class ParserState:
-        """
-        A namespace for an enumeration.
-        """
-        # Going to append next symbol as-is
-        NORMAL = 1
-        # Going to append 'null' if the next symbol is comma
-        COMMA = 2
-        # We're inside a string; going to wait for an unescaped comma
-        STRING = 3
-        # We're inside a string, previous character is a backslash
-        STRING_ESCAPE = 4
 
     state = ParserState.NORMAL
     result = ''
