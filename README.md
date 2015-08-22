@@ -18,7 +18,7 @@
 
 * A simple debug tool (`gt_dump_json`) that dumps Google Translate response as well-formatted JSON.
 
-The `languages` script can be used for fetching the abbreviation/language list (or you can just see [the table](https://github.com/shdown/gt/wiki/Abbreviation%E2%86%92language-correspondence-table)).
+The `languages` script can be used for fetching the abbreviation/language list (or you can just see [the table](https://github.com/shdown/gt/wiki/Languages)).
 
 The `gt_play` script can be used for playing back/downloading voice using Google Translate voice synthesizer.
 
