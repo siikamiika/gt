@@ -40,13 +40,17 @@ If no text given, the program starts in interactive mode:
 
 ![alt](https://cloud.githubusercontent.com/assets/5462697/8271850/ffd445c6-1834-11e5-9261-b49a612fb86b.png)
 
+`--correct` also transcribes text to a different writing system:
+
+![alt](https://cloud.githubusercontent.com/assets/5462697/9425354/e6bfaa28-4915-11e5-9a5e-41d6b8238d03.png)
+
 Bells and whistles:
 
 ![alt](https://cloud.githubusercontent.com/assets/5462697/7940006/cfc4d7d4-0956-11e5-9728-2bba2aa4ecba.png)
 
 `--segments`:
 
-![alt](https://cloud.githubusercontent.com/assets/5462697/8569162/3929eeca-257d-11e5-86da-f5a1cb58e969.png)
+![alt](https://cloud.githubusercontent.com/assets/5462697/9425351/d194eec4-4915-11e5-93e3-29d4786b0c81.png)
 
 Transliteration (`-tTr` is for `--translit --source-translit --result-only`):
 
