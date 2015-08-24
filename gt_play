@@ -159,6 +159,7 @@ play() {
         rm -- "$tempfile"
     }
 
+    local -a downloader
     if ! ret downloader select_downloader_ "$USERAGENT"; then
         echo >&2 "E: can't auto-detect downloader."
         _cleanup_tempfile
