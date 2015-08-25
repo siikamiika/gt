@@ -1,5 +1,5 @@
 #!/bin/sh
-# USAGE: languages.sh [DOMAIN]
+# USAGE: gt_languages [DOMAIN]
 #
 # Dumps Google Translate language list. You can specify a custom domain to
 # change the language of language names.
