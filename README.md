@@ -22,6 +22,16 @@ The `gt_languages` script can be used for fetching the abbreviation/language lis
 
 The `gt_play` script can be used for playing back/downloading voice using Google Translate voice synthesizer.
 
+# Installation
+
+Clone the repository into your local directory:
+
+`git clone https://github.com/shdown/gt`
+
+Or use `pip3`:
+
+`pip3 install --upgrade gt`
+
 # Screenshots
 
 ### Command-line interface
