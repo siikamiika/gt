@@ -66,6 +66,9 @@ map the "see also" list to notification actions.
     "yes": map all;
     <number>: map first <number> entries only.''')
 
+    parser.add_argument('-o', '--original', action='store_true',
+                        help='show original text')
+
     parser.add_argument('-L', '--interface-lang',
                         help='specify the interface language (that is, language'
                              ' of speech part names)')
@@ -112,6 +115,10 @@ map the "see also" list to notification actions.
 
         summary, message = '', ''
 
+        if args.original:
+            summary += '{}\n'.format(
+                html_escape(text))
+
         if args.source_lang == 'auto':
             summary += '(Language detected: {})'.format(
                 html_escape(translation.source_lang))
@@ -150,7 +157,7 @@ map the "see also" list to notification actions.
             for index, word in enumerate(see_also):
                 notification.add_action('sa_{}'.format(index), word, callback)
 
-        notification.update(summary, message)
+        notification.update(summary.strip(), message.strip())
         notification.show()
 
         if messing_with_mainloop:
