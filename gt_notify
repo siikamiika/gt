@@ -147,10 +147,8 @@ map the "see also" list to notification actions.
 
             def callback(_, action):
                 notification.close()
-
-                command, arg = action.split('_', 1)
-                if command == 'sa':
-                    index = int(arg)
+                if action.startswith('sa_'):
+                    index = int(action[len('sa_'):])
                     new_params = (source_lang, target_lang, see_also[index])
                     params_stack.append(new_params)
 
