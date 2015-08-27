@@ -116,7 +116,7 @@ map the "see also" list to notification actions.
         summary, message = '', ''
 
         if args.original:
-            summary += '{}\n'.format(html_escape(text))
+            summary += '{}\n'.format(html_escape(translation.original))
 
         if args.source_lang == 'auto':
             summary += '(Language detected: {})\n'.format(
