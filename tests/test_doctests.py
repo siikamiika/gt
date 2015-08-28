@@ -1,6 +1,5 @@
 import doctest
 import pkgutil
-
 import gt
 
 def load_tests(loader, tests, ignore): # pylint: disable=unused-argument

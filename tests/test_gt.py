@@ -1,5 +1,4 @@
 import unittest
-
 import gt
 
 class MaxWeight(unittest.TestCase):
