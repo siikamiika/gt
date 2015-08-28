@@ -152,17 +152,9 @@ download() {
 #     $2 - text
 #     $3 - encoding
 play() {
-    local tempfile
-    tempfile=$(mktemp --suffix=.mp3) || return "$?"
-
-    _cleanup_tempfile() {
-        rm -- "$tempfile"
-    }
-
     local -a downloader
     if ! ret downloader select_downloader_ "$USERAGENT"; then
         echo >&2 "E: can't auto-detect downloader."
-        _cleanup_tempfile
         return 1
     fi
 
@@ -177,13 +169,19 @@ play() {
                  kaffeine parole totem vlc
         then
             echo >&2 "E: can't auto-detect player."
-            _cleanup_tempfile
             return 1
         fi
     fi
 
     local url
     ret url get_voice_url_ "$@"
+
+    local tempfile
+    tempfile=$(mktemp --suffix=.mp3) || return "$?"
+
+    _cleanup_tempfile() {
+        rm -- "$tempfile"
+    }
 
     if ! command -- "${downloader[@]}" "$tempfile" "$url"; then
         _cleanup_tempfile
