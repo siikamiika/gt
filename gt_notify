@@ -72,6 +72,7 @@ map the "see also" list to notification actions.
     parser.add_argument('-L', '--interface-lang',
                         help='specify the interface language (that is, language'
                              ' of speech part names)')
+    parser.add_argument('--text', help='specify text to translate')
 
     parser.add_argument('source_lang',
                         help='source language code, or \'auto\' to auto-detect')
@@ -80,12 +81,15 @@ map the "see also" list to notification actions.
 
     args = parser.parse_args()
 
-    selection = subprocess.check_output(['xsel', '-o', '--' + args.selection],
-                                        universal_newlines=True)
-
     messing_with_mainloop = bool(args.see_also)
 
-    params_stack = [(args.source_lang, args.target_lang, selection)]
+    if args.text:
+        text = args.text
+    else:
+        text = subprocess.check_output(['xsel', '-o', '--' + args.selection],
+                                       universal_newlines=True)
+
+    params_stack = [(args.source_lang, args.target_lang, text)]
 
     notify2.init('gt_notify',
                  mainloop='glib' if messing_with_mainloop else None)
