@@ -2,8 +2,9 @@
 import os
 import sys
 import argparse
-import gt
 from html import unescape as html_unescape
+from copy import deepcopy
+import gt
 
 def parse_colors(colors):
     """
@@ -26,7 +27,28 @@ def stream_ansi_capable(stream):
 
 DEFAULT_COLORS = 'no=1;33:tr=32:sp=1;34:tv=1;31:os=:he=1;32:ex=33:bo=1;4:co=1;4:ss=1;31'
 
+class Options:
+    names_by_letters = {}
+
+    @staticmethod
+    def add_flag(letter, name):
+        Options.names_by_letters[letter] = name
+
+    def __init__(self, args):
+        for name in Options.names_by_letters.values():
+            setattr(self, name, getattr(args, name))
+        self.source_lang = args.source_lang
+        self.target_lang = args.target_lang
+        self.interface_lang = args.interface_lang
+
+    def set_by_letter(self, letter, value):
+        setattr(self, Options.names_by_letters[letter], value)
+
 def main():
+    def add_flag(target, letter, name, **kwargs):
+        target.add_argument(letter, name, **kwargs)
+        Options.add_flag(letter.lstrip('-'), name.lstrip('-').replace('-', '_'))
+
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawTextHelpFormatter,
         description='''CLI Google Translate client
@@ -62,60 +84,70 @@ environment variables:
 
     If no "text" arguments given, the program will start in the interactive
     mode. You can quit it by sending an EOF (typically Ctrl+D).
+
+    You can use commands in interactive mode. The syntax is the following:
+        :command[ :command ...][ text]
+    List of commands:
+        >LANG        set target language
+        LANG>        set source language
+        LANG>LANG    set both source and target languages
+        r            swap source and target languages
+        -LETTER      enable option represented by LETTER
+        +LETTER      disable option represented by LETTER
+    Use ::text to translate a text that starts with a semicolon.
 ''')
 
-    parser.add_argument('-T', '--source-translit',
-                        action='store_true',
-                        help='show source transliteration')
+    add_flag(parser, '-T', '--source-translit',
+             action='store_true',
+             help='show source transliteration')
 
-    parser.add_argument('-t', '--translit',
-                        action='store_true',
-                        help='show translation transliteration')
+    add_flag(parser, '-t', '--translit',
+             action='store_true',
+             help='show translation transliteration')
 
     verbosity = parser.add_mutually_exclusive_group()
-    verbosity.add_argument('-r', '--result-only',
-                           action='store_true',
-                           help='do not show translation variants of a given '
-                                'word')
+    add_flag(verbosity, '-r', '--result-only',
+             action='store_true',
+             help='do not show translation variants of a given word')
 
-    verbosity.add_argument('-x', '--extended',
-                           action='store_true',
-                           help='show synonyms in source language for each '
-                                'translation variant')
+    add_flag(verbosity, '-x', '--extended',
+             action='store_true',
+             help='show synonyms in source language for each translation '
+                  'variant')
 
-    parser.add_argument('-S', '--segments',
-                        action='store_true',
-                        help='show translation of each text segment')
+    add_flag(parser, '-S', '--segments',
+             action='store_true',
+             help='show translation of each text segment')
 
-    parser.add_argument('-e', '--examples',
-                        action='store_true',
-                        help='show usage examples of a given word')
+    add_flag(parser, '-e', '--examples',
+             action='store_true',
+             help='show usage examples of a given word')
 
-    parser.add_argument('-d', '--definitions',
-                        action='store_true',
-                        help='show definitions of a given word')
+    add_flag(parser, '-d', '--definitions',
+             action='store_true',
+             help='show definitions of a given word')
 
-    parser.add_argument('-a', '--see-also',
-                        action='store_true',
-                        help='show the "see also" list for a given word')
+    add_flag(parser, '-a', '--see-also',
+             action='store_true',
+             help='show the "see also" list for a given word')
 
-    parser.add_argument('-s', '--synonyms',
-                        action='store_true',
-                        help='show synonym list for a given word')
+    add_flag(parser, '-s', '--synonyms',
+             action='store_true',
+             help='show synonym list for a given word')
 
-    parser.add_argument('-c', '--correct',
-                        action='store_true',
-                        help='auto-correct the original text (or transcribe to '
-                             'a different writing system)')
+    add_flag(parser, '-c', '--correct',
+             action='store_true',
+             help='auto-correct the original text (or transcribe to a different'
+                  ' writing system)')
 
-    parser.add_argument('-l', '--suggest-lang',
-                        action='store_true',
-                        help='suggest original language(s)')
+    add_flag(parser, '-l', '--suggest-lang',
+             action='store_true',
+             help='suggest original language(s)')
 
-    parser.add_argument('-R', '--ratings',
-                        action='store_true',
-                        help='show translation ratings (only makes sense with '
-                             '-x/--extended)')
+    add_flag(parser, '-R', '--ratings',
+             action='store_true',
+             help='show translation ratings (only makes sense with '
+                  '-x/--extended)')
 
     parser.add_argument('-L', '--interface-lang',
                         help='specify the interface language (that is, language'
@@ -130,6 +162,7 @@ environment variables:
                         help='text to translate')
 
     args = parser.parse_args()
+    opts = Options(args)
 
     ansi_capable = stream_ansi_capable(sys.stdout) and term_ansi_capable()
 
@@ -185,21 +218,23 @@ environment variables:
         middle_index = round((width * level - fullblocks) * (len(blocks)-1))
         return start + blocks[middle_index] + end
 
-    def get_translation(source_lang, target_lang, text):
+    def get_translation(text, opts):
         return gt.get_translation(
-            source_lang, target_lang, text,
-            include_translit=args.translit or args.source_translit,
-            include_variants=not args.result_only,
-            include_segments=args.segments,
-            include_examples=args.examples,
-            include_definitions=args.definitions,
-            include_see_also=args.see_also,
-            include_synonyms=args.synonyms,
-            suggest_language=args.suggest_lang,
-            correct_typos=args.correct,
-            interface_lang=args.interface_lang)
+            opts.source_lang, opts.target_lang, text,
+            include_translit=opts.translit or opts.source_translit,
+            include_variants=not opts.result_only,
+            include_segments=opts.segments,
+            include_examples=opts.examples,
+            include_definitions=opts.definitions,
+            include_see_also=opts.see_also,
+            include_synonyms=opts.synonyms,
+            suggest_language=opts.suggest_lang,
+            correct_typos=opts.correct,
+            interface_lang=opts.interface_lang)
 
-    def print_translation(translation):
+    def print_translation(text, opts):
+        translation = get_translation(text, opts)
+
         if translation.correction.corrected_text:
             if translation.correction.corrected_html:
                 highlighted = html_unescape(colorize_between(
@@ -213,18 +248,18 @@ environment variables:
                     colorize('no', 'Text was changed to:'),
                     translation.correction.corrected_text))
 
-            translation = get_translation(args.source_lang, args.target_lang,
-                                          translation.correction.corrected_text)
+            translation = get_translation(
+                translation.correction.corrected_text, opts)
 
         if not translation.source_lang:
             print(colorize('no',
                            'Seems that this source language is not supported.'))
 
-        if args.source_lang == 'auto':
+        if opts.source_lang == 'auto':
             print(colorize('no', 'Language detected: {}'.format(
                 translation.source_lang)))
 
-        if args.suggest_lang:
+        if opts.suggest_lang:
             lang_suggests = [s.language for s in translation.lang_suggests]
             if not lang_suggests:
                 print(colorize('no', 'No languages were suggested'))
@@ -232,7 +267,7 @@ environment variables:
                 print(colorize('no', 'Language(s) suggested: {}'.format(
                     ', '.join(lang_suggests))))
 
-        if args.source_translit and translation.original_translit:
+        if opts.source_translit and translation.original_translit:
             print(colorize('tr', translation.original_translit))
 
         if translation.segments:
@@ -247,14 +282,14 @@ environment variables:
         else:
             print(translation.translation)
 
-        if args.translit and translation.translation_translit:
+        if opts.translit and translation.translation_translit:
             print(colorize('tr', translation.translation_translit))
 
         for group in translation.variant_groups:
-            if args.extended:
+            if opts.extended:
                 print(' {}:'.format(colorize('sp', group.speech_part)))
                 for variant in group.variants:
-                    if args.ratings:
+                    if opts.ratings:
                         if variant.weight is not None and group.max_weight:
                             level = variant.weight / group.max_weight
                         else:
@@ -301,12 +336,31 @@ environment variables:
             print('\n{}:'.format(colorize('he', 'See also')))
             print(' {}'.format(', '.join(translation.see_also)))
 
-
     if args.text:
-        translation = get_translation(args.source_lang, args.target_lang,
-                                      ' '.join(args.text))
-        print_translation(translation)
+        print_translation(' '.join(args.text), opts)
     else:
+        def apply_command(command, opts):
+            if command.startswith('>'):
+                opts.target_lang = command[1:]
+            elif command.endswith('>'):
+                opts.source_lang = command[:-1]
+            elif '>' in command:
+                opts.source_lang, opts.target_lang = command.split('>', 1)
+            elif command == 'r':
+                opts.source_lang, opts.target_lang = (opts.target_lang,
+                                                      opts.source_lang)
+            elif command.startswith('-') or command.startswith('+'):
+                value = command[0] == '-'
+                letter = command[1:]
+                try:
+                    opts.set_by_letter(letter, value)
+                except KeyError:
+                    print(colorize('no', 'Option letter "{}" is unknown'.format(
+                        letter)))
+            else:
+                print(colorize('no', 'Command "{}" is unknown'.format(
+                    command)))
+
         try:
             # input() uses readline if and only if this module is loaded.
             import readline # pylint: disable=unused-variable
@@ -315,12 +369,34 @@ environment variables:
         while True:
             text = None
             try:
-                text = input('> ')
+                text = input('{}:{}> '.format(
+                    opts.source_lang, opts.target_lang))
             except EOFError:
                 break
-            translation = get_translation(args.source_lang, args.target_lang,
-                                          text)
-            print_translation(translation)
+
+            commands = []
+            while text.startswith(':'):
+                # Drop leading semicolon
+                text = text[1:]
+                if text.startswith(':'):
+                    break
+                parts = text.split(maxsplit=1)
+                commands.append(parts[0])
+                if len(parts) == 2:
+                    text = parts[1].lstrip()
+                else:
+                    text = ''
+            if text:
+                if commands:
+                    local_opts = deepcopy(opts)
+                    for command in commands:
+                        apply_command(command, local_opts)
+                    print_translation(text, local_opts)
+                else:
+                    print_translation(text, opts)
+            else:
+                for command in commands:
+                    apply_command(command, opts)
         # Print a newline so that shell prompt that will appear on the next line
         # will not be messed up with our prompt.
         print()
