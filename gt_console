@@ -94,7 +94,7 @@ environment variables:
         r            swap source and target languages
         -LETTER      enable option represented by LETTER
         +LETTER      disable option represented by LETTER
-    Use ::text to translate a text that starts with a semicolon.
+    Use ::text to translate a text that starts with a colon.
 ''')
 
     add_flag(parser, '-T', '--source-translit',
@@ -376,7 +376,7 @@ environment variables:
 
             commands = []
             while text.startswith(':'):
-                # Drop leading semicolon
+                # Drop leading colon
                 text = text[1:]
                 if text.startswith(':'):
                     break
