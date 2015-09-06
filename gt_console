@@ -381,11 +381,8 @@ environment variables:
                 if text.startswith(':'):
                     break
                 parts = text.split(maxsplit=1)
-                commands.append(parts[0])
-                if len(parts) == 2:
-                    text = parts[1].lstrip()
-                else:
-                    text = ''
+                commands.append(parts[0] if parts else '')
+                text = parts[1].lstrip() if len(parts) > 1 else ''
             if text:
                 if commands:
                     local_opts = deepcopy(opts)
