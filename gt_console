@@ -42,7 +42,10 @@ class Options:
         self.interface_lang = args.interface_lang
 
     def set_by_letter(self, letter, value):
-        setattr(self, Options.names_by_letters[letter], value)
+        try:
+            setattr(self, Options.names_by_letters[letter], value)
+        except KeyError:
+            raise ValueError('unknown flag letter ' + letter)
 
 def main():
     def add_flag(target, letter, name, **kwargs):
@@ -354,7 +357,7 @@ environment variables:
                 for letter in command[1:]:
                     try:
                         opts.set_by_letter(letter, value)
-                    except KeyError:
+                    except ValueError:
                         print(colorize(
                             'no',
                             'Option letter "{}" is unknown'.format(letter)))
