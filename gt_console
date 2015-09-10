@@ -351,12 +351,13 @@ environment variables:
                                                       opts.source_lang)
             elif command.startswith('-') or command.startswith('+'):
                 value = command[0] == '-'
-                letter = command[1:]
-                try:
-                    opts.set_by_letter(letter, value)
-                except KeyError:
-                    print(colorize('no', 'Option letter "{}" is unknown'.format(
-                        letter)))
+                for letter in command[1:]:
+                    try:
+                        opts.set_by_letter(letter, value)
+                    except KeyError:
+                        print(colorize(
+                            'no',
+                            'Option letter "{}" is unknown'.format(letter)))
             else:
                 print(colorize('no', 'Command "{}" is unknown'.format(
                     command)))
