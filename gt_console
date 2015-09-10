@@ -90,6 +90,8 @@ environment variables:
 
     You can use commands in interactive mode. The syntax is the following:
         :command[ :command ...][ text]
+    If 'text' is present, it is translated and commands are only applied for
+    this translation.
     List of commands:
         >LANG        set target language
         LANG>        set source language
