@@ -44,7 +44,7 @@ Simple usage:
 
 If no text given, the program starts in interactive mode:
 
-![alt](https://cloud.githubusercontent.com/assets/5462697/7939983/a5a314a2-0956-11e5-91d5-76ae38fb8119.png)
+![alt](https://cloud.githubusercontent.com/assets/5462697/9788443/8266a362-57d2-11e5-9359-b698d6de9a3c.png)
 
 `--correct`. Note that additional text arguments are joined by space, so you don’t need to quote phrases:
 
