@@ -51,18 +51,10 @@ def _str(obj):
 
 class TranslationVariantsGroup:
     class TranslationVariant:
-        translation = None
-        synonyms = None
-        weight = None
-
         def __init__(self, json_obj):
             self.translation = _list_get(json_obj, 0)
             self.synonyms = _list_get(json_obj, 1)
             self.weight = _list_get(json_obj, 3)
-
-    speech_part = None
-    variants = None
-    max_weight = None
 
     def __init__(self, json_obj):
         self.speech_part = _list_get(json_obj, 0)
@@ -72,27 +64,17 @@ class TranslationVariantsGroup:
                               default=0)
 
 class SegmentTranslation:
-    original_segment = None
-    translations = None
-
     def __init__(self, json_obj):
         self.original_segment = _list_get(json_obj, 0)
         self.translations = [_list_get(obj, 0) for obj
                              in _list(_list_get(json_obj, 2))]
 
 class LanguageSuggestion:
-    language = None
-    weight = None
-
     def __init__(self, language, weight):
         self.language = language
         self.weight = weight
 
 class SynonymsGroup:
-    speech_part = None
-    synonyms = None
-    dict_entry = None
-
     def __init__(self, json_obj):
         self.speech_part = _list_get(json_obj, 0)
         self.synonyms = _list_get(json_obj, 1, 0, 0)
@@ -100,17 +82,10 @@ class SynonymsGroup:
 
 class DefinitionsGroup:
     class Definition:
-        definition = None
-        dict_entry = None
-        example = None
-
         def __init__(self, json_obj):
             self.definition = _list_get(json_obj, 0)
             self.dict_entry = _list_get(json_obj, 1)
             self.example = _list_get(json_obj, 2)
-
-    speech_part = None
-    definitions = None
 
     def __init__(self, json_obj):
         self.speech_part = _list_get(json_obj, 0)
@@ -118,9 +93,6 @@ class DefinitionsGroup:
                             in _list(_list_get(json_obj, 1))]
 
 class UsageExample:
-    example_html = None
-    dict_entry = None
-
     def __init__(self, json_obj):
         self.example_html = _list_get(json_obj, 0)
         self.dict_entry = _list_get(json_obj, 5)
@@ -134,28 +106,12 @@ class Correction:
     corrected_html can be 'None' when corrected_text is not - e.g. when Google
     Translate "corrects" a transliteration to a different writing system.
     """
-    corrected_text = None
-    corrected_html = None
 
     def __init__(self, json_obj):
         self.corrected_html = _list_get(json_obj, 0)
         self.corrected_text = _list_get(json_obj, 1)
 
 class Translation:
-    translation = None
-    original = None
-    translation_translit = None
-    original_translit = None
-    source_lang = None
-    variant_groups = None
-    segments = None
-    correction = None
-    lang_suggests = None
-    synonym_groups = None
-    definition_groups = None
-    examples = None
-    see_also = None
-
     def __init__(self, json_obj):
         self.translation = ''
         self.original = ''
