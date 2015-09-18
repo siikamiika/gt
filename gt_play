@@ -1,239 +1,103 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python3
+import shutil
+import subprocess
+import argparse
+import itertools
+import tempfile
+import os
+from urllib.parse import quote_plus
 
-# This is needed for select_binary_ and joining arguments by space with $*.
-IFS=$' \t\n'
+USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0'
 
-################################################################################
+PLAYERS = [
+    'mpv --no-ytdl', 'mplayer2', 'mplayer', 'amarok', 'audacious', 'banshee',
+    'clementine', 'deadbeef', 'exaile', 'rhythmbox', 'xmms', 'mpg123', 'bomi',
+    'dragon', 'kaffeine', 'parole', 'totem', 'vlc',
+]
 
-# Makes $_ans a reference to a variable passed as $1 and then invokes a function
-# with arguments passed as the rest.
-# TAKES:
-#     $1 — variable name to return answer to
-# [rest] — function and, optionally, arguments
-ret() {
-    declare -n _ans=$1
-    "${@:2}"
-}
+EXTENSION = 'mp3'
 
-################################################################################
+def binary_exists(binary):
+    return shutil.which(binary) is not None
 
-# Checks if $1 is a name of an existent binary.
-# TAKES:
-#     $1 — binary name
-# [rest] — (ignored)
-# RETURNS:
-#     0 — if $1 is a name of an existent binary
-#    >0 — otherwise
-has() {
-    command -v -- "$@" >/dev/null 2>/dev/null
-}
+def run(args):
+    subprocess.check_call(args)
 
-# Returns a first argument (as array, split by $IFS) first field of which is
-# a name of an existent binary.
-# TAKES:
-#     $@ — commands with arguments separated by $IFS
-# RETURNS:
-#     0 — if binary was found
-#     1 — otherwise
-select_binary_() {
-    local binary
-    for binary; do
-        if has $binary; then
-            _ans=( $binary )
+class DownloaderUnavailableException(BaseException):
+    pass
+
+class NothingDetectedException(BaseException):
+    pass
+
+def play(filename, try_before=None):
+    for player in itertools.chain(try_before or [], PLAYERS):
+        words = player.split()
+        if words and binary_exists(words[0]):
+            run(words + [filename])
             return
-        fi
-    done
-    return 1
-}
+    raise NothingDetectedException('no player detected')
 
-# Selects a downloader. The result is an array you should append an output
-# filename and an URL to.
-# TAKES:
-#     $1 — User-Agent
-# RETURNS:
-#     0 — if downloader was found
-#     1 — otherwise.
-select_downloader_() {
-    if has wget; then
-        _ans=( wget -U "$1" -O )
-    elif has curl; then
-        _ans=( curl -L -A "$1" -o )
-    else
-        return 1
-    fi
-}
+def download_wget(url, out):
+    if not binary_exists('wget'):
+        raise DownloaderUnavailableException()
+    run(['wget', '-O', out, '-U', USER_AGENT, url])
 
-# Makes a reasonable file name from a base and an extension.
-# TAKES:
-#     $1 - a base for a filename
-#     $2 - extension
-make_filename_() {
-    local base=$1 ext=$2
-    # Remove forward slashes
-    base=${base//\//}
-    # Remove leading dots
-    base=${base##.}
-    # Substitute "_" if the result is empty
-    base=${base:-_}
-    # Cut to 128 symbols
-    base=${base:0:128}
-    # Remove forward slashes
-    ext=${ext//\//}
-    # Cut to 8 symbols
-    ext=${ext:0:8}
-    # Combine
-    _ans=$base.$ext
-}
+def download_curl(url, out):
+    if not binary_exists('curl'):
+        raise DownloaderUnavailableException()
+    run(['curl', '-L', '-o', out, '-A', USER_AGENT, url])
 
-# URL-encodes a string.
-# TAKES:
-#     $1 - string
-urlencode_() {
-    local LC_ALL=C # Forces splitting strings by bytes, not by Unicode symbols
-    local symbol result
-    local -i i len=${#1}
-    for (( i = 0; i < len; ++i )); do
-        symbol=${1:$i:1}
-        if [[ $symbol != [-_.~a-zA-Z0-9] ]]; then
-            printf -v symbol '%%%02X' "'$symbol"
-        fi
-        result+=$symbol
-    done
-    _ans=$result
-}
+def download(url, out):
+    for downloader in [download_wget, download_curl]:
+        try:
+            downloader(url, out)
+            return
+        except DownloaderUnavailableException:
+            pass
+    raise NothingDetectedException('no downloader detected')
 
-################################################################################
+def get_url(lang, text):
+    return 'http://translate.google.com/translate_tts?ie=UTF-8&tl={lang}&q={text}&client=t'.format(
+        lang=quote_plus(lang), text=quote_plus(text))
 
-USERAGENT='Mozilla/5.0 (X11; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0'
+def get_filename(text, maxlen=128):
+    text = text.replace('/', '')
+    text = text.strip('.')
+    text = text[:maxlen]
+    return text
 
-# TAKES:
-#     $1 - language code
-#     $2 - text
-#     $3 - encoding
-get_voice_url_() {
-    local lang=$1 text=$2 enc=$3
-    if (( ${#text} > 100 )); then
-        echo >&2 "W: text is too big (${#text}/100), cutting down."
-        text=${text:0:100}
-    fi
-    ret text urlencode_ "$text"
-    # shellcheck disable=SC2034
-    _ans="http://translate.google.com/translate_tts?ie=$enc&tl=$lang&q=$text&total=1&idx=0&client=t&prev=input"
-}
+def main():
+    parser = argparse.ArgumentParser('Google text-to-speech service client')
+    actions = parser.add_mutually_exclusive_group()
+    actions.add_argument('-p', '--player',
+                         help='specify player binary')
+    actions.add_argument('-d', '--download',
+                         action='store_true',
+                         help='download, do not play')
+    actions.add_argument('-g', '--get-url',
+                         action='store_true',
+                         help='get voice URL, do not play (note that you need a browser User-Agent '
+                              'to access it)')
+    parser.add_argument('lang')
+    parser.add_argument('text', nargs='+')
+    args = parser.parse_args()
 
-# TAKES:
-#     $1 - language code
-#     $2 - text
-#     $3 - encoding
-print_voice_url() {
-    local url
-    ret url get_voice_url_ "$@"
-    printf '%s\n' "$url"
-}
+    text = ' '.join(args.text)
+    url = get_url(args.lang, text)
 
-# TAKES:
-#     $1 - language code
-#     $2 - text
-#     $3 - encoding
-download() {
-    local -a downloader
-    if ! ret downloader select_downloader_ "$USERAGENT"; then
-        echo >&2 "E: can't auto-detect downloader."
-        return 1
-    fi
-    local filename url
-    ret filename make_filename_ "$2" mp3
-    ret url get_voice_url_ "$@"
-    command -- "${downloader[@]}" "$filename" "$url"
-}
+    if args.get_url:
+        print(url)
+    elif args.download:
+        download(url, '{}.{}'.format(get_filename(text), EXTENSION))
+    else:
+        try_before = []
+        if args.player:
+            try_before.append(args.player)
+        try_before.append(os.getenv('PLAYER', ''))
 
-# TAKES:
-#     $1 - language code
-#     $2 - text
-#     $3 - encoding
-play() {
-    local -a downloader
-    if ! ret downloader select_downloader_ "$USERAGENT"; then
-        echo >&2 "E: can't auto-detect downloader."
-        return 1
-    fi
+        with tempfile.NamedTemporaryFile(suffix='.' + EXTENSION) as tmp:
+            download(url, tmp.name)
+            play(tmp.name, try_before)
 
-    local -a player
-    if [[ -v option_player ]]; then
-        player=( $option_player )
-    else
-        # shellcheck disable=SC2086,SC2153
-        if ! ret player select_binary_ ${PLAYER:+"$PLAYER"} \
-                 'mpv --no-ytdl' mplayer2 mplayer amarok audacious banshee \
-                 clementine deadbeef exaile rhythmbox xmms mpg123 bomi dragon \
-                 kaffeine parole totem vlc
-        then
-            echo >&2 "E: can't auto-detect player."
-            return 1
-        fi
-    fi
-
-    local url
-    ret url get_voice_url_ "$@"
-
-    local tempfile
-    tempfile=$(mktemp --suffix=.mp3) || return "$?"
-
-    _cleanup_tempfile() {
-        rm -- "$tempfile"
-    }
-
-    if ! command -- "${downloader[@]}" "$tempfile" "$url"; then
-        _cleanup_tempfile
-        return 1
-    fi
-    if ! command -- "${player[@]}" "$tempfile"; then
-        _cleanup_tempfile
-        return 1
-    fi
-    _cleanup_tempfile
-}
-
-################################################################################
-
-usage() {
-    echo >&2 "\
-USAGE: ${0##*/} [-gd] [-p PLAYER] [-e ENCODING] [--] LANG TEXT [TEXT...]
-
-If multiple TEXT arguments are given, they are joined by space.
-
-OPTIONS:
-    -g: print voice URL, do not play
-          NOTE: you must have a browser User-Agent to access it.
-    -d: download, do not play
-    -p: specify a player
-    -e: specify TEXT encoding (default: UTF-8)
-
-EXAMPLES:
-    ${0##*/} en party; ${0##*/} en_US party"
-    exit 2
-}
-
-option_action=play
-option_encoding='UTF-8'
-unset option_player
-
-while getopts 'gdp:e:' option; do
-    case "$option" in
-        g) option_action=print_voice_url ;;
-        d) option_action=download ;;
-        p) option_player=$OPTARG ;;
-        e) option_encoding=$OPTARG ;;
-        *) usage ;;
-    esac
-done
-
-# Drop processed arguments
-shift "$(( OPTIND - 1 ))" || usage
-
-# Now, the first argument is LANG and the rest is TEXT.
-# At least one TEXT argument is required.
-(( $# < 2 )) && usage
-
-# "$*" joins arguments by the first symbol of $IFS.
-"$option_action" "$1" "${*:2}" "$option_encoding"
+if __name__ == '__main__':
+    main()
