@@ -6,7 +6,7 @@ from html import escape as html_escape
 import gt
 
 class SeeAlso:
-    """Wrapper for '--see-also' argument value"""
+    """Wrapper for ``--see-also`` argument value"""
     VALUE_NO = -1
     VALUE_YES = -2
 

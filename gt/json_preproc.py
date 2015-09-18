@@ -1,6 +1,6 @@
 """
-This module contains the 'preprocess' function that converts JavaScript objects
-into JSON ones.
+This module contains the ``preprocess`` function that converts JavaScript
+objects into JSON ones.
 """
 
 class ParserState:
@@ -20,8 +20,8 @@ def preprocess(source):
     """
     Converts JavaScript-compatible nested arrays to a valid JSON.
     The only known differences are:
-        - omission of 'null' inside arrays
-        - an optional meaningless comma before ']'
+        - omission of ``null`` inside arrays
+        - an optional meaningless comma before ``]``
 
     Args:
         source: JavaScript-compatible nested arrays string

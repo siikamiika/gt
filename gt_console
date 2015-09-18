@@ -8,8 +8,8 @@ import gt
 
 def parse_colors(colors):
     """
-    Creates a dictionary from a string of 'key=value' segments delimited
-    by ':', simply ignoring segments that don't contain '='.
+    Creates a dictionary from a string of ``key=value`` segments delimited
+    by ``:``, simply ignoring segments that don't contain ``=``.
     """
     return dict(kv.split('=', 1) for kv in colors.split(':') if '=' in kv)
 
@@ -185,11 +185,11 @@ environment variables:
 
     def colorize_between(color, begin, end, text, alt_begin='*', alt_end='*'):
         """
-        Wraps segments of 'text' between 'begin' and 'end' with ANSI escapes
-        corresponding to given "part of output" if ansi_capable flag is set, or
-        wraps them with 'alt_begin' and 'alt_end' otherwise.
-        If unmatched 'begin' on the end of 'text' is detected, the reset ANSI
-        escape or 'alt_end' is inserted to the end.
+        Wraps segments of ``text`` between ``begin`` and ``end`` with ANSI
+        escapes corresponding to given "part of output" if ansi_capable flag is
+        set, or wraps them with ``alt_begin`` and ``alt_end`` otherwise.
+        If unmatched ``begin`` on the end of ``text`` is detected, the reset
+        ANSI escape or ``alt_end`` is inserted to the end.
         """
         if ansi_capable:
             color_begin, color_end = '\033[{}m'.format(colors[color]), '\033[0m'

@@ -4,7 +4,7 @@ This module contains data structures that reflect Google Translate response.
 
 def _list_get(obj, *indices):
     """
-    Safely obtains an object from nested lists. Returns None in case of an
+    Safely obtains an object from nested lists. Returns ``None`` in case of an
     error - that is, if on some step an object fetched is not a list or if the
     next index is invalid.
 
@@ -101,10 +101,10 @@ class Correction:
     """
     Correction.
 
-    corrected_text is 'None' when no corrections were made.
+    ``corrected_text`` is ``None`` when no corrections were made.
 
-    corrected_html can be 'None' when corrected_text is not - e.g. when Google
-    Translate "corrects" a transliteration to a different writing system.
+    `corrected_html`` can be ``None`` when corrected_text is not - e.g. when
+    Google Translate "corrects" a transliteration to a different writing system.
     """
 
     def __init__(self, json_obj):
