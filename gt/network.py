@@ -3,6 +3,7 @@ This module contains an URL construction and fetching function.
 """
 from urllib.parse import quote_plus
 from urllib.request import Request, urlopen
+from random import randint
 
 USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0'
 
@@ -40,7 +41,8 @@ def fetch_response(source_lang, target_lang, text,
     url = 'http://translate.google.com/translate_a/single?client=t'
     url += '&sl=' + quote_plus(source_lang) + \
            '&tl=' + quote_plus(target_lang) + \
-           '&q=' + quote_plus(text)
+           '&q=' + quote_plus(text) + \
+           '&tk={}|{}'.format(randint(100000, 999999), randint(100000, 999999))
 
     if include_translation:
         # 't' is for 'translation'
