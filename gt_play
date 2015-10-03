@@ -57,7 +57,7 @@ def download(url, out):
     raise NothingDetectedException('no downloader detected')
 
 def get_url(lang, text):
-    return 'http://translate.google.com/translate_tts?ie=UTF-8&tl={lang}&q={text}&client=t'.format(
+    return 'https://translate.google.com/translate_tts?ie=UTF-8&tl={lang}&q={text}&client=t'.format(
         lang=quote_plus(lang), text=quote_plus(text))
 
 def get_filename(text, maxlen=128):

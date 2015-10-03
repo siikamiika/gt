@@ -38,7 +38,7 @@ def fetch_response(source_lang, target_lang, text,
     Returns:
         response as a string
     """
-    url = 'http://translate.google.com/translate_a/single?client=t'
+    url = 'https://translate.google.com/translate_a/single?client=t'
     url += '&sl=' + quote_plus(source_lang) + \
            '&tl=' + quote_plus(target_lang) + \
            '&q=' + quote_plus(text) + \
