@@ -6,6 +6,7 @@ import itertools
 import tempfile
 import os
 from urllib.parse import quote_plus
+from random import randint
 
 USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0'
 
@@ -57,8 +58,9 @@ def download(url, out):
     raise NothingDetectedException('no downloader detected')
 
 def get_url(lang, text):
-    return 'https://translate.google.com/translate_tts?ie=UTF-8&tl={lang}&q={text}&client=t'.format(
-        lang=quote_plus(lang), text=quote_plus(text))
+    return 'https://translate.google.com/translate_tts?ie=UTF-8&tl={lang}&q={text}&client=t&tk={r1}|{r2}'.format(
+        lang=quote_plus(lang), text=quote_plus(text),
+        r1=randint(100000, 999999), r2=randint(100000, 999999))
 
 def get_filename(text, maxlen=128):
     text = text.replace('/', '')
