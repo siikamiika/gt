@@ -4,8 +4,33 @@ This module contains an URL construction and fetching function.
 from urllib.parse import quote_plus
 from urllib.request import Request, urlopen
 from random import randint
+import time
+import ctypes
 
 USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0'
+
+### https://github.com/soimort/translate-shell/issues/94#issuecomment-165433715
+def RL(a, b):
+    for c in range(0, len(b)-2, 3):
+        d = b[c+2]
+        d = ord(d) - 87 if d >= 'a' else int(d)
+        xa = ctypes.c_uint32(a).value
+        d = xa >> d if b[c+1] == '+' else xa << d
+        a = a + d & 4294967295 if b[c] == '+' else a ^ d
+    return ctypes.c_int32(a).value
+
+
+def calc_tk(a):
+    b = int(time.time() / 3600)
+    d = a.encode('utf-8')
+    a = b
+    for di in d:
+        a = RL(a + di, '+-a^+6')
+    a = RL(a, '+-3^+b+-f')
+    a = a if a >= 0 else ((a & 2147483647) + 2147483648)
+    a %= pow(10, 6)
+    return '%d.%d' % (a, a ^ b)
+###
 
 def fetch_response(source_lang, target_lang, text,
                    include_translation=True, include_translit=False,
@@ -41,8 +66,8 @@ def fetch_response(source_lang, target_lang, text,
     url = 'https://translate.google.com/translate_a/single?client=t'
     url += '&sl=' + quote_plus(source_lang) + \
            '&tl=' + quote_plus(target_lang) + \
-           '&q=' + quote_plus(text) + \
-           '&tk={}|{}'.format(randint(100000, 999999), randint(100000, 999999))
+           '&tk=' + calc_tk(text) + \
+           '&q=' + quote_plus(text)
 
     if include_translation:
         # 't' is for 'translation'
